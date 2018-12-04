@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="D:/Program Files/eclipse/jee-2018-09/eclipse/workplace/jars/pi4j-1.2-SNAPSHOT/lib/junit.jar"/>
+	<classpathentry kind="lib" path="D:/Program Files/eclipse/jee-2018-09/eclipse/workplace/jars/pi4j-1.2-SNAPSHOT/lib/pi4j-core.jar" sourcepath="D:/Program Files/eclipse/jee-2018-09/eclipse/workplace/jars/pi4j-1.2-SNAPSHOT/lib/pi4j-core-sources.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/D:/Program%20Files/eclipse/jee-2018-09/eclipse/workplace/jars/pi4j-1.2-SNAPSHOT/lib/pi4j-core-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="lib" path="D:/Program Files/eclipse/jee-2018-09/eclipse/workplace/jars/processing/core.jar"/>
+	<classpathentry kind="lib" path="D:/Program Files/eclipse/jee-2018-09/eclipse/workplace/jars/processing/jogl-all.jar"/>
+	<classpathentry kind="lib" path="D:/Program Files/eclipse/jee-2018-09/eclipse/workplace/jars/processing/contributed libs/controlP5.jar"/>
+	<classpathentry kind="lib" path="D:/Program Files/eclipse/jee-2018-09/eclipse/workplace/jars/processing/gluegen-rt.jar"/>
+	<classpathentry kind="lib" path="D:/Program Files/eclipse/jee-2018-09/eclipse/workplace/jars/processing/gluegen-rt-natives-linux-armv6hf.jar"/>
+	<classpathentry kind="lib" path="D:/Program Files/eclipse/jee-2018-09/eclipse/workplace/jars/processing/jogl-all-natives-linux-armv6hf.jar"/>
+	<classpathentry kind="lib" path="D:/Program Files/eclipse/jee-2018-09/eclipse/workplace/jars/ejml-v0.37-libs/ejml-core-0.37.jar" sourcepath="D:/Program Files/eclipse/jee-2018-09/eclipse/workplace/jars/ejml-v0.37-libs/ejml-core-0.37-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Program Files/eclipse/jee-2018-09/eclipse/workplace/jars/ejml-v0.37-libs/ejml-fdense-0.37.jar" sourcepath="D:/Program Files/eclipse/jee-2018-09/eclipse/workplace/jars/ejml-v0.37-libs/ejml-fdense-0.37-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Program Files/eclipse/jee-2018-09/eclipse/workplace/jars/ejml-v0.37-libs/ejml-simple-0.37.jar" sourcepath="D:/Program Files/eclipse/jee-2018-09/eclipse/workplace/jars/ejml-v0.37-libs/ejml-simple-0.37-sources.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
