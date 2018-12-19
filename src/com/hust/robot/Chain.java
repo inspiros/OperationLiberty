@@ -1,10 +1,9 @@
 package com.hust.robot;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import com.hust.utils.FloatMatrix3;
 import com.hust.utils.FloatMatrix4;
+import com.hust.utils.FloatQuaternion;
 import com.hust.utils.FloatVector3;
 import com.hust.view.Drawable;
 import com.hust.view.HApplet;
@@ -15,24 +14,41 @@ public class Chain implements DataChangeListener<Float>, Drawable<HApplet> {
 
 	// private HApplet app;
 
-	private FloatMatrix3 globalRotation;
-	private FloatMatrix4 globalTransformation;
+	/**
+	 * Pre - starting rotation.
+	 */
+	public FloatQuaternion globalRotation;
+	/**
+	 * Pre - starting point.
+	 */
+	public FloatVector3 globalTranslation;
 
-	private List<Bone> bones = new ArrayList<Bone>();
+	private ArrayList<Bone> bones = new ArrayList<Bone>();
 
-	private List<Float> anglesLock = new ArrayList<Float>();
-	private List<FloatVector3> pointsLock = new ArrayList<FloatVector3>();
-	private boolean locked;
+	private ArrayList<FloatVector3> pointsLock = new ArrayList<FloatVector3>();
 
 	public Chain() {
-		globalRotation = new FloatMatrix3(1);
-		globalTransformation = globalRotation.toFloatMatrix4();
+		globalRotation = new FloatQuaternion(0, 0, 0, 1);
+		globalTranslation = FloatVector3.ZERO;
 	}
 
+	/**
+	 * Add new Bone to the Chain
+	 * 
+	 * @param direction    The link direction based on the local axis.
+	 * @param rotationAxis The rotation axis of the joint.
+	 * @param angle        The default angle in degrees.
+	 * @param lowerLimit   The lower limit of anlge rotation.
+	 * @param upperLimit   The upper limit of anlge rotation.
+	 */
 	public void addConsecutiveBone(FloatVector3 direction, FloatVector3 rotationAxis, float angle, float lowerLimit,
 			float upperLimit) {
 		Bone bone = new Bone(this, direction, rotationAxis, angle, lowerLimit, upperLimit);
 		bones.add(bone);
+		bones.trimToSize();
+		
+		pointsLock.add(FloatVector3.ZERO);
+		pointsLock.trimToSize();
 	}
 
 	public Bone getBaseBone() {
@@ -51,11 +67,11 @@ public class Chain implements DataChangeListener<Float>, Drawable<HApplet> {
 		return bones.size();
 	}
 
-	public FloatMatrix3 getLocalRotation() {
+	public FloatQuaternion getLocalRotation() {
 		return bones.get(bones.size() - 1).getGlobalRotation();
 	}
 
-	public FloatMatrix3 getGlobalRotation() {
+	public FloatQuaternion getGlobalRotation() {
 		return globalRotation;
 	}
 
@@ -64,7 +80,7 @@ public class Chain implements DataChangeListener<Float>, Drawable<HApplet> {
 	}
 
 	public FloatMatrix4 getGlobalTransformation() {
-		return globalTransformation;
+		return new FloatMatrix4(globalRotation, globalTranslation);
 	}
 
 	public FloatVector3 getEndPoint() {
@@ -205,21 +221,15 @@ public class Chain implements DataChangeListener<Float>, Drawable<HApplet> {
 		pointsLock.add(bones.get(0).getStartPoint());
 		for (int i = 0; i < bones.size(); i++) {
 			bones.get(i).lock();
-			anglesLock.add(bones.get(i).getAngleDegs());
 			pointsLock.add(bones.get(i).getEndPoint());
 		}
-		locked = true;
 	}
 
 	public void unlock() {
-		for (int i = bones.size() - 1; i >= 0; i--) {
-			bones.get(i).setAngleDegs(anglesLock.remove(i));
-		}
-		recalculateTransformations();
 		for (int i = 0; i < bones.size(); i++) {
 			bones.get(i).unlock();
 		}
-		locked = false;
+		recalculateTransformations();
 		pointsLock.clear();
 	}
 
@@ -235,46 +245,20 @@ public class Chain implements DataChangeListener<Float>, Drawable<HApplet> {
 	public void render(HApplet drawer) {
 		drawer.pushMatrix();
 		drawer.pushStyle();
-		drawer.pushMatrix();
-		if (drawer.lightWeight) {
-			renderLines(drawer);
-		} else {
-			drawer.pushMatrix();
-			drawer.fill(160);
-			drawer.stroke(0, 180);
-			renderBones(drawer);
-			drawer.stroke(20);
-			drawer.popMatrix();
-			renderLines(drawer);
-		}
-		drawer.popMatrix();
-		drawer.fill(180);
-		drawer.cylinder(14, 12, 6, 10);
+		
+		//drawer.fill(180);
+		renderBones(drawer);
+
+		//drawer.fill(180);
+		//drawer.cylinder(14, 12, 6, 10);
 		drawer.popMatrix();
 		drawer.popStyle();
 	}
 
 	private void renderBones(HApplet drawer) {
-	}
-
-	private void renderLines(HApplet drawer) {
-		int dof = bones.size();
-		if (dof < 1) {
-			return;
+		for (Bone b : bones) {
+			b.render(drawer);
 		}
-		// Lockable implementation
-		if (!locked) {
-			for (int i = 0; i < dof; i++) {
-				drawer.strokeWeight(dof + 2 - i);
-				drawer.line(bones.get(i).getStartPoint(), bones.get(i).getEndPoint());
-			}
-		} else {
-			for (int i = 0; i < dof; i++) {
-				drawer.strokeWeight(dof + 2 - i);
-				drawer.line(pointsLock.get(i), pointsLock.get(i + 1));
-			}
-		}
-		drawer.strokeWeight(1);
 	}
 
 	@Override

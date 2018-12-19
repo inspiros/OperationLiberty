@@ -137,6 +137,31 @@ public class FloatMatrix4 {
 	}
 
 	/**
+	 * Constructor to create a FloatMatrix4 from a FloatQuaternion and an origin.
+	 * 
+	 * @param rotationQuat The FloatQuaternion to use.
+	 * @param origin       The FloatVector3 to use as the origin.
+	 */
+	public FloatMatrix4(FloatQuaternion rotationQuat, FloatVector3 origin) {
+		m00 = 1.0f - 2.0f * (rotationQuat.y * rotationQuat.y + rotationQuat.z * rotationQuat.z);
+		m01 = 2.0f * (rotationQuat.x * rotationQuat.y + rotationQuat.z * rotationQuat.w);
+		m02 = 2.0f * (rotationQuat.x * rotationQuat.z - rotationQuat.y * rotationQuat.w);
+		m03 = origin.x;
+		
+		m10 = 2.0f * (rotationQuat.x * rotationQuat.y - rotationQuat.z * rotationQuat.w);
+		m11 = 1.0f - 2.0f * (rotationQuat.x * rotationQuat.x + rotationQuat.z * rotationQuat.z);
+		m12 = 2.0f * (rotationQuat.y * rotationQuat.z + rotationQuat.x * rotationQuat.w);
+		m13 = origin.y;
+		
+		m20 = 2.0f * (rotationQuat.x * rotationQuat.z + rotationQuat.y * rotationQuat.w);
+		m21 = 2.0f * (rotationQuat.y * rotationQuat.z - rotationQuat.x * rotationQuat.w);
+		m22 = 1.0f - 2.0f * (rotationQuat.x * rotationQuat.x + rotationQuat.y * rotationQuat.y);
+		m23 = origin.z;
+		
+		m33 = 1.0f;
+	}
+
+	/**
 	 * Constructor to create a FloatMatrix4 from a FloatMatrix3 and an origin.
 	 * 
 	 * @param rotationMatrix The FloatMatrix3 to use for the X/Y/Z axes.

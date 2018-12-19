@@ -13,7 +13,11 @@
 	<classpathentry kind="lib" path="D:/Program Files/eclipse/jee-2018-09/eclipse/workplace/jars/processing/gluegen-rt.jar"/>
 	<classpathentry kind="lib" path="D:/Program Files/eclipse/jee-2018-09/eclipse/workplace/jars/processing/gluegen-rt-natives-linux-armv6hf.jar"/>
 	<classpathentry kind="lib" path="D:/Program Files/eclipse/jee-2018-09/eclipse/workplace/jars/processing/jogl-all-natives-linux-armv6hf.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/caliko"/>
 	<classpathentry kind="lib" path="D:/Program Files/eclipse/jee-2018-09/eclipse/workplace/jars/processing/core.jar"/>
+	<classpathentry kind="lib" path="D:/Program Files/eclipse/jee-2018-09/eclipse/workplace/jars/processing/gluegen-rt-natives-windows-amd64.jar"/>
+	<classpathentry kind="lib" path="D:/Program Files/eclipse/jee-2018-09/eclipse/workplace/jars/processing/jogl-all-natives-windows-amd64.jar"/>
+	<classpathentry kind="lib" path="D:/Program Files/eclipse/jee-2018-09/eclipse/workplace/jars/processing/contributed libs/G4P.jar"/>
+	<classpathentry kind="lib" path="D:/Program Files/eclipse/jee-2018-09/eclipse/workplace/jars/processing/contributed libs/peasycam.jar"/>
+	<classpathentry kind="lib" path="D:/Program Files/eclipse/jee-2018-09/eclipse/workplace/jars/processing/contributed libs/peasy-math.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

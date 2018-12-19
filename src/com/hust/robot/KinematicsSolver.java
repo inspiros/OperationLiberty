@@ -3,7 +3,6 @@ package com.hust.robot;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hust.utils.FloatMatrix4;
 import com.hust.utils.FloatVector3;
 
 public class KinematicsSolver {
@@ -22,8 +21,9 @@ public class KinematicsSolver {
 		 */
 		FABRIK
 	}
+
 	private IKMethod method;
-	
+
 	private FloatVector3 target;
 
 	public static float tolerance = 0.01f;
@@ -51,11 +51,11 @@ public class KinematicsSolver {
 	public void setTarget(FloatVector3 target) {
 		this.target = target;
 	}
-	
+
 	public List<KinematicsConstraint> getConstraints() {
 		return constraintList;
 	}
-	
+
 	public KinematicsConstraint getConstraint(int i) {
 		return constraintList.get(i);
 	}
@@ -72,11 +72,8 @@ public class KinematicsSolver {
 	}
 
 	public FloatVector3 forwardKinematics() {
-		FloatMatrix4 fkMatrix = chain.getGlobalTransformation();
-		for (int i = 0; i < chain.getDof(); i++) {
-			fkMatrix = chain.getBone(i).transform(fkMatrix);
-		}
-		return fkMatrix.getOrigin();
+		chain.recalculateTransformations();
+		return chain.getEndEffector();
 	}
 
 	public FloatVector3 forwardKinematics(float... anglesDegs) {
@@ -88,12 +85,8 @@ public class KinematicsSolver {
 	}
 
 	public FloatVector3[] totalForwardKinematics() {
-		FloatVector3[] endPoints = new FloatVector3[chain.getDof()];
-		FloatMatrix4 fk = chain.getGlobalTransformation();
-		for (int i = 0; i < chain.getDof(); i++) {
-			fk = chain.getBone(i).transform(fk);
-			endPoints[i] = fk.getOrigin();
-		}
+		chain.recalculateTransformations();
+		FloatVector3[] endPoints = chain.getEndPoints();
 		return endPoints;
 	}
 
@@ -125,9 +118,9 @@ public class KinematicsSolver {
 				float gradient = partialGradient(i);
 				chain.updateAngleDegs(i, -learningRate * gradient);
 			}
-			//distance = distanceFromTarget();
+			// distance = distanceFromTarget();
 			iterationCount++;
-			if (iterationCount % 50 == 0) {
+			if (iterationCount % 100 == 0) {
 				learningRate *= 0.8;
 			}
 		}
@@ -137,7 +130,7 @@ public class KinematicsSolver {
 		chain.setTargetsDegs(newAngles);
 		return newAngles;
 	}
-	
+
 	public float[] solveIK() {
 		switch (method) {
 		case JACOBIAN:

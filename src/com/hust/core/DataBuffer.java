@@ -19,9 +19,6 @@ public class DataBuffer {
 	private KinematicsSolver kinematicsSolver;
 
 	private int dof;
-	private float[] angles;
-
-	public boolean limitSpeed = true;
 
 	public static DataBuffer setupModel() {
 		DataBuffer res = new DataBuffer();
@@ -29,15 +26,14 @@ public class DataBuffer {
 		res.robot = new Chain();
 		res.robot.addConsecutiveBone(new FloatVector3(0, 0, 50), FloatVector3.Z_AXIS, 0, -180, 180);
 		res.robot.addConsecutiveBone(new FloatVector3(0, 0, 40), FloatVector3.Y_AXIS, 45, -120, 120);
-		res.robot.addConsecutiveBone(new FloatVector3(0, 0, 40), FloatVector3.Y_AXIS, 45, -120, 120);
-		res.robot.addConsecutiveBone(new FloatVector3(0, 0, 30), FloatVector3.Y_AXIS, 0, -120, 120);
+		res.robot.addConsecutiveBone(new FloatVector3(0, 0, 40), FloatVector3.X_AXIS, 0, -120, 120);
+		res.robot.addConsecutiveBone(new FloatVector3(0, 0, 30), FloatVector3.Y_AXIS, 45, -120, 120);
 		res.robot.addConsecutiveBone(new FloatVector3(0, 0, 20), FloatVector3.Y_AXIS, 0, -120, 120);
 
 		res.kinematicsSolver = new KinematicsSolver();
 		res.kinematicsSolver.setChain(res.robot);
 
 		res.dof = res.robot.getDof();
-		res.angles = res.robot.getAnglesDegs();
 
 		return res;
 	}
@@ -55,37 +51,19 @@ public class DataBuffer {
 	}
 
 	public float[] getAnglesDegs() {
-		return angles;
+		return robot.getAnglesDegs();
 	}
 
 	public float getAngleDegs(int i) {
-		return angles[i];
+		return robot.getAngleDegs(i);
 	}
 
-	public void setAnglesDegs(float... anglesDegs) {
-		robot.setAnglesDegs(this.angles);
+	public void setTargetDegs(float... anglesDegs) {
+		robot.setTargetsDegs(anglesDegs);
 	}
 
-	public void setAngleDegs(int id, float angleDegs) {
-		if (limitSpeed) {
-			robot.setTargetDegs(id, angleDegs);
-		} else {
-
-		}
-	}
-
-	public void updateAnglesDegs(float... changesDegs) {
-		robot.updateAnglesDegs(changesDegs);
-	}
-
-	public void updateAngleDegs(int id, float changeDegs) {
-		robot.updateAngleDegs(id, changeDegs);
-	}
-
-	public void setTargets(float... targets) {
-	}
-
-	public void setTarget(int id, float target) {
+	public void setTargetDegs(int id, float angleDegs) {
+		robot.setTargetDegs(id, angleDegs);
 	}
 
 	public void moveToPosition(FloatVector3 newPosition, KinematicsSolver.IKMethod ikAlgorithm) {

@@ -4,6 +4,9 @@ import com.hust.core.DataBuffer;
 
 public abstract class Operator implements Runnable {
 	protected long sleepTime = DataBuffer.SLEEP_TIME;
+	
+	protected final float totalOperationTime = 2000.0f;
+	protected float operatedTime;
 
 	protected Thread thread;
 
@@ -56,11 +59,13 @@ public abstract class Operator implements Runnable {
 			try {
 				loop();
 				Thread.sleep(sleepTime);
+				operatedTime += sleepTime;
 			} catch (InterruptedException e) {
 				break;
 			}
 		}
 		terminate();
+		operatedTime = 0;
 		thread = null;
 	}
 

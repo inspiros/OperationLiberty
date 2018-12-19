@@ -13,7 +13,7 @@ import processing.core.PVector;
  */
 public abstract class HApplet extends PApplet {
 
-	public boolean lightWeight = true;
+	public boolean lightWeight = false;
 
 	protected ComponentsDrawer componentsDrawer = new ComponentsDrawer(this);
 
@@ -32,12 +32,15 @@ public abstract class HApplet extends PApplet {
 
 	@Override
 	public void draw() {
-		// hint(DISABLE_DEPTH_TEST);
+		hint(DISABLE_DEPTH_TEST);
 		pushMatrix();
 		render();
+		hint(ENABLE_DEPTH_TEST);
+		ambientLight(127, 127, 127);
+		directionalLight(180, 180, 180, -1, -1, 1);
 		componentsDrawer.renderDrawables();
 		popMatrix();
-		// hint(ENABLE_DEPTH_TEST);
+		noLights();
 	}
 
 	public abstract void render();
@@ -45,20 +48,22 @@ public abstract class HApplet extends PApplet {
 	@Override
 	public void camera(float eyeX, float eyeY, float eyeZ, float centerX, float centerY, float centerZ, float upX,
 			float upY, float upZ) {
-		// TODO Auto-generated method stub
 		super.camera(eyeX, eyeY, -eyeZ, centerX, centerY, centerZ, upX, upY, upZ);
 	}
 
 	@Override
 	public void translate(float x, float y, float z) {
-		// TODO Auto-generated method stub
 		super.translate(x, y, -z);
 	}
 
 	@Override
 	public void point(float x, float y, float z) {
-		// TODO Auto-generated method stub
 		super.point(x, y, -z);
+	}
+
+	@Override
+	public void vertex(float x, float y, float z) {
+		super.vertex(x, y, -z);
 	}
 
 	/**
@@ -71,7 +76,6 @@ public abstract class HApplet extends PApplet {
 
 	@Override
 	public void line(float x1, float y1, float z1, float x2, float y2, float z2) {
-		// TODO Auto-generated method stub
 		super.line(x1, y1, -z1, x2, y2, -z2);
 	}
 
@@ -162,6 +166,102 @@ public abstract class HApplet extends PApplet {
 	}
 
 	/**
+	 * Draw a circle in 3D
+	 * 
+	 * @param center
+	 * @param normal
+	 */
+	public void regularPolygon(FloatVector3 center, float radius, FloatVector3 normal, int sides) {
+		pushMatrix();
+		FloatVector3 zAxis = normal.normalized();
+		FloatVector3 xAxis = new FloatVector3(normal.x, 0, -normal.z).normalized();
+		FloatVector3 yAxis = zAxis.mul(xAxis);
+
+		float angle;
+		float[] x = new float[sides + 1];
+		float[] y = new float[sides + 1];
+		float[] z = new float[sides + 1];
+		for (int i = 0; i < x.length; i++) {
+			angle = TWO_PI / (sides) * i;
+			x[i] = center.x + radius * (xAxis.x * (float) Math.cos(angle) + yAxis.x * (float) Math.sin(angle));
+			y[i] = center.y + radius * (xAxis.y * (float) Math.cos(angle) + yAxis.y * (float) Math.sin(angle));
+			z[i] = center.z + radius * (xAxis.z * (float) Math.cos(angle) + yAxis.z * (float) Math.sin(angle));
+		}
+		beginShape(TRIANGLE_FAN);
+
+		vertex(center.x, center.y, center.z);
+
+		for (int i = 0; i < sides + 1; i++) {
+			vertex(x[i], y[i], z[i]);
+		}
+		endShape();
+		popMatrix();
+	}
+
+	/**
+	 * Draw a cylinder
+	 * 
+	 * @param center1
+	 * @param center2
+	 * @param radius1
+	 * @param radius2
+	 * @param sides
+	 */
+	public void cylinder(FloatVector3 center1, FloatVector3 center2, FloatVector3 prependicularAxis, float radius1,
+			float radius2, int sides) {
+		pushMatrix();
+		FloatVector3 zAxis = center2.sub(center1).normalized();
+		FloatVector3 xAxis = prependicularAxis;
+		FloatVector3 yAxis = zAxis.cross(xAxis);
+
+		float angle;
+		float[] x1 = new float[sides + 1];
+		float[] y1 = new float[sides + 1];
+		float[] z1 = new float[sides + 1];
+
+		float[] x2 = new float[sides + 1];
+		float[] y2 = new float[sides + 1];
+		float[] z2 = new float[sides + 1];
+
+		for (int i = 0; i < x1.length; i++) {
+			angle = TWO_PI / (sides) * i;
+			float xBase = xAxis.x * cos(angle) + yAxis.x * sin(angle);
+			float yBase = xAxis.y * cos(angle) + yAxis.y * sin(angle);
+			float zBase = xAxis.z * cos(angle) + yAxis.z * sin(angle);
+			x1[i] = center1.x + radius1 * xBase;
+			y1[i] = center1.y + radius1 * yBase;
+			z1[i] = center1.z + radius1 * zBase;
+
+			x2[i] = center2.x + radius2 * xBase;
+			y2[i] = center2.y + radius2 * yBase;
+			z2[i] = center2.z + radius2 * zBase;
+		}
+
+		beginShape(TRIANGLE_FAN);
+		vertex(center1.x, center1.y, center1.z);
+		for (int i = 0; i < x1.length; i++) {
+			vertex(x1[i], y1[i], z1[i]);
+		}
+		endShape();
+
+		beginShape(QUAD_STRIP);
+		for (int i = 0; i < x1.length; i++) {
+			vertex(x1[i], y1[i], z1[i]);
+			vertex(x2[i], y2[i], z2[i]);
+		}
+		endShape();
+
+		beginShape(TRIANGLE_FAN);
+		vertex(center2.x, center2.y, center2.z);
+		for (int i = 0; i < x2.length; i++) {
+			vertex(x2[i], y2[i], z2[i]);
+		}
+		endShape();
+
+		popMatrix();
+	}
+
+	/**
 	 * Draw a cylinder.
 	 * 
 	 * @param bottom
@@ -171,8 +271,8 @@ public abstract class HApplet extends PApplet {
 	 */
 	public void cylinder(float bottom, float top, float h, int sides) {
 		pushMatrix();
-		rotateX((float) Math.toRadians(-90));
-		translate(0, h / 2, 0);
+		// rotateX((float) Math.toRadians(-90));
+		// translate(0, h / 2, 0);
 
 		float angle;
 		float[] x = new float[sides + 1];
@@ -194,10 +294,10 @@ public abstract class HApplet extends PApplet {
 		}
 		beginShape(TRIANGLE_FAN);
 
-		vertex(0, -h / 2, 0);
+		vertex(0, 0, -h / 2);
 
 		for (int i = 0; i < x.length; i++) {
-			vertex(x[i], -h / 2, z[i]);
+			vertex(x[i], z[i], -h / 2);
 		}
 
 		endShape();
@@ -206,8 +306,8 @@ public abstract class HApplet extends PApplet {
 		beginShape(QUAD_STRIP);
 
 		for (int i = 0; i < x.length; i++) {
-			vertex(x[i], -h / 2, z[i]);
-			vertex(x2[i], h / 2, z2[i]);
+			vertex(x[i], z[i], -h / 2);
+			vertex(x2[i], z2[i], h / 2);
 		}
 
 		endShape();
@@ -215,10 +315,10 @@ public abstract class HApplet extends PApplet {
 		// draw the top of the cylinder
 		beginShape(TRIANGLE_FAN);
 
-		vertex(0, h / 2, 0);
+		vertex(0, 0, h / 2);
 
 		for (int i = 0; i < x.length; i++) {
-			vertex(x2[i], h / 2, z2[i]);
+			vertex(x2[i], z2[i], h / 2);
 		}
 
 		endShape();

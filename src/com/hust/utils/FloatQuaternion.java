@@ -121,6 +121,15 @@ public class FloatQuaternion {
 	}
 
 	/**
+	 * Return the magnitude of this quaternion.
+	 * 
+	 * @return Return the magnitude of this quaternion.
+	 */
+	public float magnitude() {
+		return (float) Math.abs(x * x + y * y + z * z + w * w);
+	}
+
+	/**
 	 * Return the rotation axis extracted from this quaternion.
 	 * 
 	 * @return Return the axis vector extracted.
@@ -163,9 +172,13 @@ public class FloatQuaternion {
 	 */
 	public FloatQuaternion mul(FloatQuaternion q) {
 		FloatQuaternion temp = new FloatQuaternion();
-		temp.x = this.w * q.x + this.x * q.w + this.y * q.z - this.z * q.y;
-		temp.y = this.w * q.y - this.x * q.z + this.y * q.w + this.z * q.x;
-		temp.z = this.w * q.z + this.x * q.y - this.y * q.x + this.z * q.w;
+//		temp.x = this.w * q.x + this.x * q.w + this.y * q.z - this.z * q.y;
+//		temp.y = this.w * q.y - this.x * q.z + this.y * q.w + this.z * q.x;
+//		temp.z = this.w * q.z + this.x * q.y - this.y * q.x + this.z * q.w;
+//		temp.w = this.w * q.w - this.x * q.x - this.y * q.y - this.z * q.z;
+		temp.x = this.w * q.x + this.x * q.w + this.z * q.y - this.y * q.z;
+		temp.y = this.w * q.y + this.y * q.w + this.x * q.z - this.z * q.x;
+		temp.z = this.w * q.z + this.z * q.w + this.y * q.x - this.x * q.y;
 		temp.w = this.w * q.w - this.x * q.x - this.y * q.y - this.z * q.z;
 		return temp;
 	}
@@ -178,9 +191,9 @@ public class FloatQuaternion {
 	 */
 	public FloatVector3 mul(FloatVector3 v) {
 		FloatQuaternion vec = new FloatQuaternion();
-		vec.x = x;
-		vec.y = y;
-		vec.z = z;
+		vec.x = v.x;
+		vec.y = v.y;
+		vec.z = v.z;
 		FloatQuaternion inverse = FloatQuaternion.inverse(this);
 		vec = this.mul(vec.mul(inverse));
 		return new FloatVector3(vec.x, vec.y, vec.z);
@@ -196,7 +209,7 @@ public class FloatQuaternion {
 	public static FloatQuaternion createQuaternionRads(FloatVector3 axis, float angleRads) {
 		FloatQuaternion quaternion = new FloatQuaternion();
 		FloatVector3 normAxis = axis.normalized();
-		angleRads *= 0.5f;
+		angleRads *= -0.5f;
 		float sin = (float) Math.sin(angleRads);
 
 		quaternion.x = normAxis.x * sin;
@@ -234,7 +247,7 @@ public class FloatQuaternion {
 	/**
 	 * Rotate this quaternion by the provided angle about the specified axis.
 	 * 
-	 * @param angleRads The angle to rotate the matrix, specified in degrees.
+	 * @param angleDegs The angle to rotate the matrix, specified in degrees.
 	 * @param axis      The axis to rotate this matrix about, relative to the
 	 *                  current configuration of this matrix.
 	 * @return The rotated version of this quaternion.
@@ -282,4 +295,33 @@ public class FloatQuaternion {
 		rotMat.m33 = 1.0f;
 		return rotMat;
 	}
+
+	/**
+	 * Return the array of this Quaternion
+	 */
+	public float[] toArray() {
+		float[] res = new float[4];
+		res[0] = x;
+		res[1] = y;
+		res[2] = z;
+		res[3] = w;
+		return res;
+	}
+
+	// Overloaded toString method
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("x: " + Utils.DECIMAL_FORMAT.format(x) + ", y: " + Utils.DECIMAL_FORMAT.format(y) + ", z: "
+				+ Utils.DECIMAL_FORMAT.format(z) + ", w: " + Utils.DECIMAL_FORMAT.format(w));
+		return sb.toString();
+	}
+
+	/**
+	 * Print this quaternion.
+	 */
+	public void print() {
+		System.out.println(this.toString());
+	}
+
 }

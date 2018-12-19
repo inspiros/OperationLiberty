@@ -13,7 +13,6 @@ public abstract class Drawer<D> {
 	}
 	
 	public void setupDrawables() {
-		System.out.println(drawables.size());
 		for (Drawable<D> drawable : drawables) {
 			drawable.setupDrawer(container);
 		}

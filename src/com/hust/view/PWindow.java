@@ -2,18 +2,19 @@ package com.hust.view;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
-import com.hust.core.Controller;
 import com.hust.core.DataBuffer;
 import com.hust.robot.DataChangeListener;
+import com.hust.robot.KinematicsSolver;
+import com.hust.utils.FloatVector3;
 import com.jogamp.newt.opengl.GLWindow;
 
 import controlP5.CallbackEvent;
 import controlP5.CallbackListener;
 import controlP5.ControlP5;
 import controlP5.Slider;
-import processing.event.MouseEvent;
+import g4p_controls.G4P;
+import g4p_controls.GCScheme;
 
 public class PWindow extends HApplet implements DataChangeListener<Float> {
 	private DataBuffer data;
@@ -23,19 +24,15 @@ public class PWindow extends HApplet implements DataChangeListener<Float> {
 	public GLWindow window;
 	private ControlP5 guiController;
 
-	private List<Slider> sliders = new ArrayList<Slider>();
+	/**
+	 * Camera control.
+	 */
+	//private PeasyCam camera;
+	private FloatVector3 cameraPosition, centerPosition;
 
-	private List<Target> targets = new LinkedList<Target>();
+	private ArrayList<Slider> sliders = new ArrayList<Slider>();
 
-	private RobotModel robotModel;
-
-	private float cameraX;
-	private float cameraY;
-	private float cameraZ = 100;
-
-	private float centerX = 100;
-	private float centerY;
-	private float centerZ;
+	private LinkedList<Target> targets = new LinkedList<Target>();
 
 	public PWindow(DataBuffer data) {
 		this.data = data;
@@ -47,30 +44,31 @@ public class PWindow extends HApplet implements DataChangeListener<Float> {
 	@Override
 	public void settings() {
 		size(800, 600, P3D);
+		smooth(4);
 	}
 
 	@Override
 	public void setup() {
 		window = (GLWindow) surface.getNative();
+		// window.setFullscreen(true);
 		surface.setTitle("Operation Liberty");
 		surface.setFrameRate(24);
 
 		// noLoop();
-		robotModel = new RobotModel(this);
-		robotModel.updateModel(data.getArm().getEndPoints());
-		cameraX = width / 3;
-		cameraY = height / 3;
-		// camera();
+//		camera = new PeasyCam(this, -100);
+//		camera.setViewport(100, 100, -100, 1);
+//		camera.lookAt(0, 0, 0);
+		cameraPosition = new FloatVector3(width / 3, height / 3, 100);
+		centerPosition = new FloatVector3();
 
 		createGui();
 	}
 
 	public void render() {
-		background(200);
+		background(100);
 		cameraTransform();
 		drawGround();
 		drawBaseAxis();
-		//robotModel.render();
 		if (targets.size() > 0) {
 			for (Target target : targets) {
 				target.render();
@@ -79,15 +77,23 @@ public class PWindow extends HApplet implements DataChangeListener<Float> {
 	}
 
 	private void drawGround() {
-		pushMatrix();
-		translate(0, 0, -20);
-		fill(140);
-		noStroke();
-		box(200, 200, 40);
-		popMatrix();
+		noFill();
+		strokeWeight(0.5f);
+		stroke(255);
+		for (int x = -200; x < 200; x += 40) {
+			beginShape(QUAD_STRIP);
+			for (int y = -200; y < 200; y += 40) {
+				vertex(x, y, 0);
+				vertex(x + 40, y, 0);
+				vertex(x, y + 40, 0);
+				vertex(x + 40, y + 40, 0);
+			}
+			endShape();
+		}
 	}
 
 	private void drawBaseAxis() {
+		strokeWeight(1.5f);
 		stroke(255, 0, 0);
 		line(0, 0, 0, 100, 0, 0);
 		stroke(0, 255, 0);
@@ -98,38 +104,34 @@ public class PWindow extends HApplet implements DataChangeListener<Float> {
 	}
 
 	public void cameraTransform() {
-		// translate(cameraX, cameraY, cameraZ);
-		// rotateX(NumericUtils.parseRadian(-90));
-		// rotateZ(NumericUtils.parseRadian(135));
-		camera(cameraX, cameraY, cameraZ, // eyeX, eyeY, eyeZ
-				centerX, centerY, centerZ, // centerX, centerY, centerZ
+		camera(cameraPosition.x, cameraPosition.y, cameraPosition.z, // eyeX, eyeY, eyeZ
+				centerPosition.x, centerPosition.y, centerPosition.z, // centerX, centerY, centerZ
 				0, 0, 1); // upX, upY, upZ
-	}
-
-	public DataBuffer getModel() {
-		return data;
 	}
 
 	@Override
 	public void mouseDragged() {
 		if (mouseButton == RIGHT) {
-			centerX += mouseX - pmouseX;
-			centerZ -= mouseY - pmouseY;
+			cameraPosition = FloatVector3.rotateZDegs(cameraPosition, (float)(pmouseX - mouseX) / 2);
+			cameraPosition = FloatVector3.rotateAboutAxisDegs(cameraPosition, (float)(pmouseY - mouseY) / 2,
+					cameraPosition.cross(FloatVector3.Z_AXIS).normalized());
 		}
 	}
 
 	@Override
-	public void mouseWheel(MouseEvent event) {
-		cameraZ += 5 * event.getCount();
+	public void mouseWheel(processing.event.MouseEvent event) {
+		cameraPosition = cameraPosition.mul((cameraPosition.length() + 3 * event.getCount()) / cameraPosition.length());
 	}
 
 	/**
 	 * GUI
 	 */
 	private void createGui() {
+		G4P.messagesEnabled(false);
+		G4P.setGlobalColorScheme(GCScheme.CYAN_SCHEME);
 
 		guiController = new ControlP5(this, createFont("Cambria", 12));
-
+		
 		for (int i = 0; i < data.getDof(); i++) {
 			Slider slider = guiController.addSlider("sliderAngle" + i)
 					.setPosition(width / 10, height / 8 + height / 10 * i).setSize(width / 4, height / 12)
@@ -139,18 +141,16 @@ public class PWindow extends HApplet implements DataChangeListener<Float> {
 
 						@Override
 						public void controlEvent(CallbackEvent event) {
-
 							if (event.getAction() == 100) {
-								try {
-									Controller.updateDegreeAngle(getId(), event.getController().getValue());
-								} catch (Exception e) {
-									e.printStackTrace();
-								}
+								targets.clear();
+
+								data.setTargetDegs(getId(), event.getController().getValue());
 							}
 						}
 					});
 			sliders.add(slider);
 		}
+		sliders.trimToSize();
 
 		guiController.addButton("forwardKinematics").setPosition(width / 10, height / 20).setSize(width / 10, 20)
 				.setLabel("FK").addCallback(new CallbackListener() {
@@ -159,10 +159,7 @@ public class PWindow extends HApplet implements DataChangeListener<Float> {
 					public void controlEvent(CallbackEvent event) {
 						// TODO Auto-generated method stub
 						if (event.getAction() == 100) {
-							try {
-								// Controller.changeDegreeAngles(-1);
-							} catch (Exception e) {
-							}
+
 						}
 					}
 				});
@@ -173,12 +170,7 @@ public class PWindow extends HApplet implements DataChangeListener<Float> {
 					public void controlEvent(CallbackEvent event) {
 						// TODO Auto-generated method stub
 						if (event.getAction() == 100) {
-							try {
-								// targets.clear();
-								new CoordinatePicker(app);
-								// Controller.changeDegreeAngles(1);
-							} catch (Exception e) {
-							}
+							new CoordinatePicker(app);
 						}
 					}
 				});
@@ -200,8 +192,8 @@ public class PWindow extends HApplet implements DataChangeListener<Float> {
 		}
 		targets.clear();
 		targets.add(new Target(app, t[0], t[1], t[2]));
-		Controller.test(targets.get(targets.size() - 1).getPosition());
-		// Controller.test(t[0], t[1], t[2]);
+
+		data.moveToPosition(new FloatVector3(t[0], t[1], t[2]), KinematicsSolver.IKMethod.GRADIENT_DESCENT);
 	}
 
 	@Override

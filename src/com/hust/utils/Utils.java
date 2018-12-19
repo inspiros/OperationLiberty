@@ -14,6 +14,9 @@ public final class Utils {
 	// Constants to translate values from degrees to radians and vice versa
 	public static final float DEGS_TO_RADS = (float) Math.PI / 180.0f;
 	public static final float RADS_TO_DEGS = 180.0f / (float) Math.PI;
+	
+	public static final float MILLIS_TO_SECS = 1 / 1000.0f;
+	public static final float SECS_TO_MILLIS = 1000.0f;
 
 	// Define a private static DecimalFormat to be used by our toString() method.
 	// Note: '0' means put a 0 there if it's zero, '#' means omit if zero.

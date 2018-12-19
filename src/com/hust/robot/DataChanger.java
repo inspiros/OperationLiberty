@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class DataChanger<T> implements Lockable {
-	private boolean locked;
+	protected boolean locked;
 
 	private List<DataChangeListener<T>> changeListeners = new ArrayList<DataChangeListener<T>>();
 	private List<DataChangeListener<T>> amountChangeListeners = new ArrayList<DataChangeListener<T>>();
@@ -21,13 +21,9 @@ public abstract class DataChanger<T> implements Lockable {
 		return locked;
 	}
 
-	public void lock() {
-		locked = true;
-	}
+	public abstract void lock();
 
-	public void unlock() {
-		locked = false;
-	}
+	public abstract void unlock();
 
 	protected void changeData(int id) {
 //		if (locked) {
