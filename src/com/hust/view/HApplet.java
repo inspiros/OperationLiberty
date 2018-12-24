@@ -1,6 +1,6 @@
 package com.hust.view;
 
-import com.hust.utils.FloatVector3;
+import com.hust.utils.data.FloatVector3;
 
 import processing.core.PApplet;
 import processing.core.PVector;
@@ -12,8 +12,6 @@ import processing.core.PVector;
  *
  */
 public abstract class HApplet extends PApplet {
-
-	public boolean lightWeight = false;
 
 	protected ComponentsDrawer componentsDrawer = new ComponentsDrawer(this);
 

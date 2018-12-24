@@ -1,14 +1,13 @@
 package com.hust.utils;
 
-import com.hust.core.DataBuffer;
+import com.hust.core.Configuration;
 
 public abstract class Operator implements Runnable {
-	protected long sleepTime = DataBuffer.SLEEP_TIME;
+	protected long sleepTime = Configuration.sleepTime;
 	
-	protected final float totalOperationTime = 2000.0f;
-	protected float operatedTime;
+	protected long operatedTime;
 
-	protected Thread thread;
+	public Thread thread;
 
 	public void setSleepTime(long millis) {
 		this.sleepTime = millis;
@@ -23,7 +22,7 @@ public abstract class Operator implements Runnable {
 		thread.start();
 	}
 
-	public void start() {
+	public synchronized void start() {
 		if (thread != null) {
 			thread.start();
 		} else {
@@ -33,11 +32,13 @@ public abstract class Operator implements Runnable {
 		}
 	}
 
-	public void abort() {
+	public synchronized void abort() {
 		if (thread != null) {
 			thread.interrupt();
 			try {
-				thread.join();
+				if (thread != null) {
+					thread.join();
+				}
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

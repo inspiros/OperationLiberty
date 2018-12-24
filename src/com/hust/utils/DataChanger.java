@@ -1,7 +1,9 @@
-package com.hust.robot;
+package com.hust.utils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.hust.robot.Lockable;
 
 public abstract class DataChanger<T> implements Lockable {
 	protected boolean locked;
@@ -13,7 +15,7 @@ public abstract class DataChanger<T> implements Lockable {
 		changeListeners.add(angleChangeListener);
 	}
 
-	protected void addDataAmountChangeListener(DataChangeListener<T> angleChangeListener) {
+	public void addDataAmountChangeListener(DataChangeListener<T> angleChangeListener) {
 		amountChangeListeners.add(angleChangeListener);
 	}
 
@@ -26,9 +28,6 @@ public abstract class DataChanger<T> implements Lockable {
 	public abstract void unlock();
 
 	protected void changeData(int id) {
-//		if (locked) {
-//			return;
-//		}
 		for (DataChangeListener<T> dataChangeListener : changeListeners) {
 			dataChangeListener.dataChanged(id);
 		}

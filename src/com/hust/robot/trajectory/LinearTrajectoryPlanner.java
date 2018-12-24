@@ -1,9 +1,10 @@
 package com.hust.robot.trajectory;
 
 public class LinearTrajectoryPlanner extends JointTrajectoryPlanner {
-	private float prevAngle, factor, totalOperationTime;
+	private float factor;
+	private long totalOperationTime;
 
-	public LinearTrajectoryPlanner(float angle, float target, float totalOperationTime) {
+	public LinearTrajectoryPlanner(float angle, float target, long totalOperationTime) {
 		this.prevAngle = angle;
 		this.target = target;
 		this.totalOperationTime = totalOperationTime;
@@ -11,7 +12,7 @@ public class LinearTrajectoryPlanner extends JointTrajectoryPlanner {
 	}
 
 	@Override
-	public float angleAt(float time) {
+	public float angleAt(long time) {
 		if (time < totalOperationTime) {
 			return prevAngle + factor * time;
 		}
@@ -19,12 +20,12 @@ public class LinearTrajectoryPlanner extends JointTrajectoryPlanner {
 	}
 
 	@Override
-	public float speedAt(float time) {
+	public float speedAt(long time) {
 		return (target - prevAngle) / totalOperationTime;
 	}
 
 	@Override
-	public float accelerationAt(float time) {
+	public float accelerationAt(long time) {
 		return 0;
 	}
 

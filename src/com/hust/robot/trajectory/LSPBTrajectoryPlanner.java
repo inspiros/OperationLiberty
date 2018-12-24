@@ -1,15 +1,16 @@
 package com.hust.robot.trajectory;
 
 public class LSPBTrajectoryPlanner extends JointTrajectoryPlanner {
-	private float prevAngle, velocity, acceleration, blendTime, totalOperationTime;
+	private float velocity, acceleration;
+	private long blendTime, totalOperationTime;
 
-	public LSPBTrajectoryPlanner(float angle, float target, float blendTimeFactor, float totalOperationTime) {
+	public LSPBTrajectoryPlanner(float angle, float target, float blendTimeFactor, long totalOperationTime) {
 		this.prevAngle = angle;
 		this.target = target;
 		blendTimeFactor = validateBlendTimeFactor(blendTimeFactor);
 		float velocityFactor = 1 + blendTimeFactor * 2;
 		this.velocity = (target - angle) / totalOperationTime * velocityFactor;
-		this.blendTime = (angle - target + velocity * totalOperationTime) / velocity;
+		this.blendTime = (long) ((angle - target + velocity * totalOperationTime) / velocity);
 		this.acceleration = velocity / blendTime;
 		this.totalOperationTime = totalOperationTime;
 	}
@@ -33,7 +34,7 @@ public class LSPBTrajectoryPlanner extends JointTrajectoryPlanner {
 //	}
 
 	@Override
-	public float angleAt(float time) {
+	public float angleAt(long time) {
 		if (time < blendTime) {
 			return prevAngle + acceleration / 2 * time * time;
 		} else if (time <= totalOperationTime - blendTime) {
@@ -46,7 +47,7 @@ public class LSPBTrajectoryPlanner extends JointTrajectoryPlanner {
 	}
 
 	@Override
-	public float speedAt(float time) {
+	public float speedAt(long time) {
 		if (time < blendTime) {
 			return acceleration / 2 * time;
 		} else if (time <= totalOperationTime - blendTime ) {
@@ -57,7 +58,7 @@ public class LSPBTrajectoryPlanner extends JointTrajectoryPlanner {
 	}
 
 	@Override
-	public float accelerationAt(float time) {
+	public float accelerationAt(long time) {
 		if (time < blendTime) {
 			return acceleration / 2;
 		} else if (time <= totalOperationTime - blendTime ) {

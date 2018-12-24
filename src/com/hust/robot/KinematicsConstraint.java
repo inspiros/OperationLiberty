@@ -3,7 +3,7 @@ package com.hust.robot;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import com.hust.utils.FloatVector3;
+import com.hust.utils.data.FloatVector3;
 
 public class KinematicsConstraint {
 
@@ -224,7 +224,7 @@ public class KinematicsConstraint {
 		if (constraintType != ConstraintType.ANGLE) {
 			throw new KinematicsConstraintTypeMismatchException(this);
 		}
-		return Math.abs(bone.joint.angle - (Float) target);
+		return Math.abs(bone.joint.angle.get() - (Float) target);
 	}
 
 	public float targetFunction() {

@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import com.hust.core.DataBuffer;
-import com.hust.robot.DataChangeListener;
+import com.hust.core.Main;
 import com.hust.robot.KinematicsSolver;
-import com.hust.utils.FloatVector3;
-import com.jogamp.newt.opengl.GLWindow;
+import com.hust.utils.DataChangeListener;
+import com.hust.utils.data.FloatVector3;
 
 import controlP5.CallbackEvent;
 import controlP5.CallbackListener;
@@ -15,27 +15,27 @@ import controlP5.ControlP5;
 import controlP5.Slider;
 import g4p_controls.G4P;
 import g4p_controls.GCScheme;
+import processing.opengl.PJOGL;
 
 public class PWindow extends HApplet implements DataChangeListener<Float> {
 	private DataBuffer data;
 	public PWindow app = this;
 
 	public final String appPath = sketchPath();
-	public GLWindow window;
 	private ControlP5 guiController;
 
 	/**
 	 * Camera control.
 	 */
-	//private PeasyCam camera;
+	// private PeasyCam camera;
 	private FloatVector3 cameraPosition, centerPosition;
 
 	private ArrayList<Slider> sliders = new ArrayList<Slider>();
 
 	private LinkedList<Target> targets = new LinkedList<Target>();
 
-	public PWindow(DataBuffer data) {
-		this.data = data;
+	public PWindow() {
+		data = Main.dataBuffer;
 		componentsDrawer.addDrawable(this.data.getArm());
 		componentsDrawer.setupDrawables();
 		HApplet.runSketch(new String[] { this.getClass().getSimpleName() }, this);
@@ -44,20 +44,19 @@ public class PWindow extends HApplet implements DataChangeListener<Float> {
 	@Override
 	public void settings() {
 		size(800, 600, P3D);
+		try {
+			PJOGL.setIcon("\\resources\\icon.png");
+		} catch (Exception e) {
+		}
 		smooth(4);
 	}
 
 	@Override
 	public void setup() {
-		window = (GLWindow) surface.getNative();
 		// window.setFullscreen(true);
 		surface.setTitle("Operation Liberty");
-		surface.setFrameRate(24);
+		surface.setFrameRate(30);
 
-		// noLoop();
-//		camera = new PeasyCam(this, -100);
-//		camera.setViewport(100, 100, -100, 1);
-//		camera.lookAt(0, 0, 0);
 		cameraPosition = new FloatVector3(width / 3, height / 3, 100);
 		centerPosition = new FloatVector3();
 
@@ -65,7 +64,7 @@ public class PWindow extends HApplet implements DataChangeListener<Float> {
 	}
 
 	public void render() {
-		background(100);
+		background(60);
 		cameraTransform();
 		drawGround();
 		drawBaseAxis();
@@ -112,8 +111,8 @@ public class PWindow extends HApplet implements DataChangeListener<Float> {
 	@Override
 	public void mouseDragged() {
 		if (mouseButton == RIGHT) {
-			cameraPosition = FloatVector3.rotateZDegs(cameraPosition, (float)(pmouseX - mouseX) / 2);
-			cameraPosition = FloatVector3.rotateAboutAxisDegs(cameraPosition, (float)(pmouseY - mouseY) / 2,
+			cameraPosition = FloatVector3.rotateZDegs(cameraPosition, (float) (pmouseX - mouseX) / 2);
+			cameraPosition = FloatVector3.rotateAboutAxisDegs(cameraPosition, (float) (pmouseY - mouseY) / 2,
 					cameraPosition.cross(FloatVector3.Z_AXIS).normalized());
 		}
 	}
@@ -131,11 +130,11 @@ public class PWindow extends HApplet implements DataChangeListener<Float> {
 		G4P.setGlobalColorScheme(GCScheme.CYAN_SCHEME);
 
 		guiController = new ControlP5(this, createFont("Cambria", 12));
-		
+
 		for (int i = 0; i < data.getDof(); i++) {
 			Slider slider = guiController.addSlider("sliderAngle" + i)
 					.setPosition(width / 10, height / 8 + height / 10 * i).setSize(width / 4, height / 12)
-					.setValue(data.getArm().getBone(i).joint.angle)
+					.setValue(data.getArm().getBone(i).joint.angle.get())
 					.setRange(data.getArm().getBone(i).joint.lowerLimit, data.getArm().getBone(i).joint.upperLimit)
 					.setLabel("θ" + i).addCallback(new IdCallbackListener(i) {
 

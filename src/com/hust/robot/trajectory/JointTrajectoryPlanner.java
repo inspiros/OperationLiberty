@@ -1,11 +1,11 @@
 package com.hust.robot.trajectory;
 
 public abstract class JointTrajectoryPlanner {
-	protected float target;
+	protected float prevAngle, target;
 
-	public abstract float angleAt(float time);
+	public abstract float angleAt(long time);
 	
-	public abstract float speedAt(float time);
+	public abstract float speedAt(long time);
 	
-	public abstract float accelerationAt(float time);
+	public abstract float accelerationAt(long time);
 }

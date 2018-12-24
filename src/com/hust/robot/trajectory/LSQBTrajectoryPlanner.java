@@ -1,15 +1,15 @@
 package com.hust.robot.trajectory;
 
 public class LSQBTrajectoryPlanner extends JointTrajectoryPlanner {
-	private float prevAngle, coefficientA, thetaC, thetaD, factor3ac, factor4ac, factor3df, factor4df, blendTime,
-			totalOperationTime;
+	private float coefficientA, thetaC, thetaD, factor3ac, factor4ac, factor3df, factor4df;
+	private long blendTime, totalOperationTime;
 
-	public LSQBTrajectoryPlanner(float angle, float target, float blendTimeFactor, float totalOperationTime) {
+	public LSQBTrajectoryPlanner(float angle, float target, float blendTimeFactor, long totalOperationTime) {
 		this.prevAngle = angle;
 		this.target = target;
 		this.totalOperationTime = totalOperationTime;
 		blendTimeFactor = validateBlendTimeFactor(blendTimeFactor);
-		this.blendTime = totalOperationTime * blendTimeFactor;
+		this.blendTime = (long) (totalOperationTime * blendTimeFactor);
 		this.coefficientA = (target - prevAngle) / (totalOperationTime - blendTime);
 		this.thetaC = prevAngle + coefficientA * blendTime / 2;
 		this.thetaD = target - coefficientA * blendTime / 2;
@@ -31,7 +31,7 @@ public class LSQBTrajectoryPlanner extends JointTrajectoryPlanner {
 	}
 
 	@Override
-	public float angleAt(float time) {
+	public float angleAt(long time) {
 		if (time < blendTime) {
 			return prevAngle + factor3ac * time * time * time + factor4ac * time * time * time * time;
 		} else if (time <= totalOperationTime - blendTime) {
@@ -44,7 +44,7 @@ public class LSQBTrajectoryPlanner extends JointTrajectoryPlanner {
 	}
 
 	@Override
-	public float speedAt(float time) {
+	public float speedAt(long time) {
 		if (time < blendTime) {
 			return 3 * factor3ac * time * time + 4 * factor4ac * time * time * time;
 		} else if (time <= totalOperationTime - blendTime) {
@@ -56,7 +56,7 @@ public class LSQBTrajectoryPlanner extends JointTrajectoryPlanner {
 	}
 
 	@Override
-	public float accelerationAt(float time) {
+	public float accelerationAt(long time) {
 		if (time < blendTime) {
 			return 6 * factor3ac * time + 12 * factor4ac * time * time;
 		} else if (time <= totalOperationTime - blendTime) {

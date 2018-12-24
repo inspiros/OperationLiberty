@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
+<?import com.jfoenix.controls.JFXTabPane?>
+<?import com.jfoenix.controls.JFXToggleNode?>
+<?import de.jensd.fx.glyphs.octicons.OctIconView?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" style="-fx-background-color: #3D4956;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.hust.view.javafx.FxApplicationController">
+   <children>
+      <SplitPane dividerPositions="0.6" prefHeight="480.0" prefWidth="640.0" style="-fx-background-color: transparent;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <items>
+            <AnchorPane prefWidth="316.0">
+               <children>
+                  <AnchorPane layoutX="11.0" layoutY="62.0" prefHeight="406.0" prefWidth="351.0" style="-fx-background-color: transparent;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="50.0">
+                     <children>
+                        <ScrollPane fitToWidth="true" hbarPolicy="NEVER" layoutX="1.6" layoutY="54.6" prefHeight="339.0" prefWidth="347.0" style="-fx-background-color: transparent;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <content>
+                              <VBox fx:id="vbox" prefHeight="0.0" prefWidth="349.0" />
+                           </content>
+                        </ScrollPane>
+                     </children>
+                  </AnchorPane>
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="480.0" prefWidth="269.0">
+               <children>
+                  <JFXTabPane prefHeight="478.0" prefWidth="316.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <tabs>
+                        <Tab text="FK">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <VBox layoutX="8.0" layoutY="8.0" spacing="16.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="8.0">
+                                       <children>
+                                          <StackPane fx:id="anchorPane1">
+                                             <children>
+                                                <AnchorPane fx:id="fkLabelPane" style="-fx-background-color: #eda678;" StackPane.alignment="CENTER">
+                                                   <children>
+                                                      <HBox layoutX="5.0" style="-fx-alignment: center-left;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                         <children>
+                                                            <Label contentDisplay="CENTER" ellipsisString="" text="Forward Kinematics" textAlignment="CENTER" textFill="WHITE">
+                                                               <font>
+                                                                  <Font name="Segoe UI" size="24.0" />
+                                                               </font>
+                                                            </Label>
+                                                         </children>
+                                                      </HBox>
+                                                   </children>
+                                                   <padding>
+                                                      <Insets left="5.0" />
+                                                   </padding>
+                                                </AnchorPane>
+                                             </children>
+                                          </StackPane>
+                                          <JFXComboBox fx:id="jfxComboBox" focusColor="#eda678" labelFloat="true" prefHeight="25.0" prefWidth="85.0" promptText="Select" style="-fx-prompt-text-fill: white;" />
+                                          <Separator prefWidth="200.0">
+                                             <VBox.margin>
+                                                <Insets />
+                                             </VBox.margin>
+                                          </Separator>
+                                          <VBox spacing="5.0">
+                                             <children>
+                                                <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Starting Point">
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font></Text>
+                                                <HBox prefHeight="16.0" prefWidth="234.0" spacing="2.0">
+                                                   <children>
+                                                      <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="X:" />
+                                                      <TextField fx:id="startingPointLbl0" editable="false" prefWidth="60.0" promptText="0" />
+                                                      <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text=" Y:" />
+                                                      <TextField fx:id="startingPointLbl1" editable="false" prefWidth="60.0" promptText="0" />
+                                                      <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text=" Z:" />
+                                                      <TextField fx:id="startingPointLbl2" editable="false" prefWidth="60.0" promptText="0" />
+                                                   </children>
+                                                </HBox>
+                                             </children>
+                                          </VBox>
+                                          <VBox spacing="5.0">
+                                             <children>
+                                                <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="End Point">
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font></Text>
+                                                <HBox prefHeight="0.0" prefWidth="234.0" spacing="2.0">
+                                                   <children>
+                                                      <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="X:" />
+                                                      <TextField fx:id="endPointLbl0" editable="false" prefWidth="60.0" promptText="0" />
+                                                      <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text=" Y:" />
+                                                      <TextField fx:id="endPointLbl1" editable="false" prefWidth="60.0" promptText="0" />
+                                                      <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text=" Z:" />
+                                                      <TextField fx:id="endPointLbl2" editable="false" prefWidth="60.0" promptText="0" />
+                                                   </children>
+                                                </HBox>
+                                             </children>
+                                          </VBox>
+                                          <VBox spacing="5.0">
+                                             <children>
+                                                <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Direction">
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font></Text>
+                                                <HBox prefHeight="0.0" prefWidth="234.0" spacing="2.0">
+                                                   <children>
+                                                      <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="X:" />
+                                                      <TextField editable="false" prefWidth="60.0" promptText="0" />
+                                                      <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text=" Y:" />
+                                                      <TextField editable="false" prefWidth="60.0" promptText="0" />
+                                                      <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text=" Z:" />
+                                                      <TextField editable="false" prefWidth="60.0" promptText="0" />
+                                                   </children>
+                                                </HBox>
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                        </Tab>
+                        <Tab text="IK">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <VBox layoutX="154.0" layoutY="138.0" prefHeight="87.0" prefWidth="234.0" spacing="16.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="8.0">
+                                       <children>
+                                          <StackPane fx:id="anchorPane2">
+                                             <children>
+                                                <AnchorPane fx:id="ikLabelPane" style="-fx-background-color: #eda678;" StackPane.alignment="CENTER">
+                                                   <children>
+                                                      <HBox layoutX="5.0" prefHeight="35.0" prefWidth="298.0" style="-fx-alignment: center-left;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                         <children>
+                                                            <Label contentDisplay="CENTER" ellipsisString="" prefHeight="40.0" prefWidth="207.0" text="Inverse Kinematics" textAlignment="CENTER" textFill="WHITE">
+                                                               <font>
+                                                                  <Font name="Segoe UI" size="24.0" />
+                                                               </font>
+                                                            </Label>
+                                                         </children>
+                                                      </HBox>
+                                                   </children>
+                                                   <padding>
+                                                      <Insets left="5.0" />
+                                                   </padding>
+                                                </AnchorPane>
+                                             </children>
+                                          </StackPane>
+                                          <VBox prefHeight="200.0" prefWidth="162.0" spacing="5.0">
+                                             <children>
+                                                <Separator prefWidth="200.0" />
+                                                <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Inverse Kinematics Algorithm">
+                                                   <font>
+                                                      <Font name="System Bold Italic" size="12.0" />
+                                                   </font>
+                                                </Text>
+                                                <JFXToggleNode fx:id="ikJacobianTranspose" alignment="CENTER_LEFT" ellipsisString="" prefHeight="25.0" prefWidth="200.0" text="Jacobian Transpose" textFill="WHITE">
+                                                   <graphic>
+                                                      <OctIconView glyphName="TRIANGLE_RIGHT" size="14.0" />
+                                                   </graphic>
+                                                   <toggleGroup>
+                                                      <ToggleGroup fx:id="ikToggleGroup" />
+                                                   </toggleGroup>
+                                                </JFXToggleNode>
+                                                <JFXToggleNode fx:id="ikFABRIK" alignment="CENTER_LEFT" disable="true" ellipsisString="" layoutX="10.0" layoutY="40.0" prefHeight="25.0" prefWidth="200.0" text="FABRIK" textFill="WHITE" toggleGroup="$ikToggleGroup">
+                                                   <graphic>
+                                                      <OctIconView glyphName="TRIANGLE_RIGHT" size="14.0" />
+                                                   </graphic>
+                                                </JFXToggleNode>
+                                                <JFXToggleNode fx:id="ikGradientDescent" alignment="CENTER_LEFT" ellipsisString="" prefHeight="25.0" prefWidth="200.0" selected="true" text="Gradient Descent" textFill="WHITE" toggleGroup="$ikToggleGroup">
+                                                   <graphic>
+                                                      <OctIconView glyphName="TRIANGLE_RIGHT" size="14.0" />
+                                                   </graphic>
+                                                </JFXToggleNode>
+                                             </children>
+                                          </VBox>
+                                          <Separator prefWidth="200.0" />
+                                          <VBox spacing="5.0">
+                                             <children>
+                                                <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Move to">
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font>
+                                                </Text>
+                                                <HBox prefHeight="16.0" prefWidth="234.0" spacing="2.0">
+                                                   <children>
+                                                      <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="X:" />
+                                                      <TextField fx:id="targetLbl0" prefWidth="60.0" promptText="0" />
+                                                      <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text=" Y:" />
+                                                      <TextField fx:id="targetLbl1" prefWidth="60.0" promptText="0" />
+                                                      <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text=" Z:" />
+                                                      <TextField fx:id="targetLbl2" prefWidth="60.0" promptText="0" />
+                                                   </children>
+                                                </HBox>
+                                                <AnchorPane>
+                                                   <children>
+                                                      <JFXButton alignment="CENTER" buttonType="RAISED" ellipsisString="" focusTraversable="false" onAction="#onSetTarget" prefHeight="25.0" prefWidth="72.0" text="Start" textAlignment="CENTER" textFill="WHITE" AnchorPane.rightAnchor="5.0">
+                                                         <font>
+                                                            <Font size="16.0" />
+                                                         </font>
+                                                      </JFXButton>
+                                                   </children>
+                                                </AnchorPane>
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                        </Tab>
+                        <Tab text="TJ">
+                          <content>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <VBox layoutX="8.0" layoutY="8.0" prefHeight="87.0" prefWidth="234.0" spacing="16.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="8.0">
+                                       <children>
+                                          <StackPane fx:id="anchorPane3">
+                                             <children>
+                                                <AnchorPane fx:id="jstLabelPane" style="-fx-background-color: #eda678;" StackPane.alignment="CENTER">
+                                                   <children>
+                                                      <HBox layoutX="5.0" prefHeight="35.0" prefWidth="298.0" style="-fx-alignment: center-left;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                         <children>
+                                                            <Label contentDisplay="CENTER" ellipsisString="" prefHeight="40.0" prefWidth="207.0" text="Trajectory" textAlignment="CENTER" textFill="WHITE">
+                                                               <font>
+                                                                  <Font name="Segoe UI" size="24.0" />
+                                                               </font>
+                                                            </Label>
+                                                         </children>
+                                                      </HBox>
+                                                   </children>
+                                                   <padding>
+                                                      <Insets left="5.0" />
+                                                   </padding>
+                                                </AnchorPane>
+                                             </children>
+                                          </StackPane>
+                                          <VBox prefHeight="200.0" prefWidth="162.0" spacing="5.0">
+                                             <children>
+                                                <Separator prefWidth="200.0" />
+                                                <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Joint Space Trajectory Method">
+                                                   <font>
+                                                      <Font name="System Bold Italic" size="12.0" />
+                                                   </font>
+                                                </Text>
+                                                <JFXToggleNode fx:id="jstNone" alignment="CENTER_LEFT" ellipsisString="" prefHeight="25.0" prefWidth="200.0" text="None" textFill="WHITE">
+                                                   <graphic>
+                                                      <OctIconView glyphName="TRIANGLE_RIGHT" size="14.0" />
+                                                   </graphic>
+                                                   <toggleGroup>
+                                                      <ToggleGroup fx:id="jstToggleGroup" />
+                                                   </toggleGroup>
+                                                </JFXToggleNode>
+                                                <JFXToggleNode fx:id="jstLinear" alignment="CENTER_LEFT" ellipsisString="" layoutX="10.0" layoutY="40.0" prefHeight="25.0" prefWidth="200.0" text="Linear Interpolation" textFill="WHITE" toggleGroup="$jstToggleGroup">
+                                                   <graphic>
+                                                      <OctIconView glyphName="TRIANGLE_RIGHT" size="14.0" />
+                                                   </graphic>
+                                                </JFXToggleNode>
+                                                <JFXToggleNode fx:id="jstCubic" alignment="CENTER_LEFT" ellipsisString="" prefHeight="25.0" prefWidth="200.0" selected="true" text="Cubic Interpolation" textFill="WHITE" toggleGroup="$jstToggleGroup">
+                                                   <graphic>
+                                                      <OctIconView glyphName="TRIANGLE_RIGHT" size="14.0" />
+                                                   </graphic>
+                                                </JFXToggleNode>
+                                                <JFXToggleNode fx:id="jstQuintic" alignment="CENTER_LEFT" ellipsisString="" layoutX="10.0" layoutY="100.0" prefHeight="25.0" prefWidth="200.0" text="Quintic Interpolation" textFill="WHITE" toggleGroup="$jstToggleGroup">
+                                                   <graphic>
+                                                      <OctIconView glyphName="TRIANGLE_RIGHT" size="14.0" />
+                                                   </graphic>
+                                                </JFXToggleNode>
+                                                <JFXToggleNode fx:id="jstLSPB" alignment="CENTER_LEFT" ellipsisString="" layoutX="10.0" layoutY="130.0" prefHeight="25.0" prefWidth="200.0" text="LSPB (2-1-2)" textFill="WHITE" toggleGroup="$jstToggleGroup">
+                                                   <graphic>
+                                                      <OctIconView glyphName="TRIANGLE_RIGHT" size="14.0" />
+                                                   </graphic>
+                                                </JFXToggleNode>
+                                                <JFXToggleNode fx:id="jstLSQB" alignment="CENTER_LEFT" ellipsisString="" layoutX="10.0" layoutY="160.0" prefHeight="25.0" prefWidth="200.0" text="LSQB (4-1-4)" textFill="WHITE" toggleGroup="$jstToggleGroup">
+                                                   <graphic>
+                                                      <OctIconView glyphName="TRIANGLE_RIGHT" size="14.0" />
+                                                   </graphic>
+                                                </JFXToggleNode>
+                                                <JFXToggleNode fx:id="jstExponential" alignment="CENTER_LEFT" ellipsisString="" layoutX="10.0" layoutY="190.0" prefHeight="25.0" prefWidth="200.0" text="Exponential" textFill="WHITE" toggleGroup="$jstToggleGroup">
+                                                   <graphic>
+                                                      <OctIconView glyphName="TRIANGLE_RIGHT" size="14.0" />
+                                                   </graphic>
+                                                </JFXToggleNode>
+                                             </children>
+                                          </VBox>
+                                          <Separator prefWidth="200.0" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </AnchorPane>
+                          </content>
+                        </Tab>
+                     </tabs>
+                  </JFXTabPane>
+               </children>
+            </AnchorPane>
+         </items>
+      </SplitPane>
+   </children>
+</AnchorPane>

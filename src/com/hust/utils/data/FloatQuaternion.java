@@ -1,4 +1,6 @@
-package com.hust.utils;
+package com.hust.utils.data;
+
+import com.hust.utils.Utils;
 
 /**
  * A custom quaternion.

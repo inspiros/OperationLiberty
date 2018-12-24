@@ -1,11 +1,14 @@
 package com.hust.robot;
 
-import com.hust.utils.FloatMatrix4;
-import com.hust.utils.FloatQuaternion;
-import com.hust.utils.FloatVector3;
 import com.hust.utils.Utils;
+import com.hust.utils.data.FloatMatrix4;
+import com.hust.utils.data.FloatQuaternion;
+import com.hust.utils.data.FloatVector3;
 import com.hust.view.Drawable;
 import com.hust.view.HApplet;
+
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleObjectProperty;
 
 public class Bone implements Comparable<Bone>, Drawable<HApplet>, Lockable {
 	public int id;
@@ -14,8 +17,8 @@ public class Bone implements Comparable<Bone>, Drawable<HApplet>, Lockable {
 
 	public Bone prev;
 
-	public Link link;
-	public Joint joint;
+	public final Link link;
+	public final Joint joint;
 
 	/**
 	 * Global rotation after
@@ -24,7 +27,8 @@ public class Bone implements Comparable<Bone>, Drawable<HApplet>, Lockable {
 	/**
 	 * Global translation after
 	 */
-	private FloatVector3 globalTranslation;
+	public ObjectProperty<FloatVector3> globalTranslation = new SimpleObjectProperty<FloatVector3>();
+	//private FloatVector3 globalTranslation;
 
 	/**
 	 * Lockable implementation.
@@ -40,6 +44,8 @@ public class Bone implements Comparable<Bone>, Drawable<HApplet>, Lockable {
 	 */
 	public Bone(Chain chain) {
 		this.chain = chain;
+		this.joint = new Joint(this);
+		this.link = new Link();
 		this.id = chain.getDof();
 		if (this.id > 0) {
 			prev = chain.getBone(this.id - 1);
@@ -94,15 +100,15 @@ public class Bone implements Comparable<Bone>, Drawable<HApplet>, Lockable {
 	}
 
 	public FloatMatrix4 getLocalTransformation() {
-		return FloatMatrix4.createTransformationMatrixDegs(link.direction, joint.rotationAxis, joint.angle);
+		return FloatMatrix4.createTransformationMatrixDegs(link.direction, joint.rotationAxis, joint.angle.get());
 	}
 
 	public FloatMatrix4 getGlobalTransformation() {
-		return new FloatMatrix4(globalRotation, globalTranslation);
+		return new FloatMatrix4(globalRotation, globalTranslation.get());
 	}
 
 	public FloatQuaternion getLocalRotation() {
-		return FloatQuaternion.createQuaternionDegs(joint.rotationAxis, joint.angle);
+		return FloatQuaternion.createQuaternionDegs(joint.rotationAxis, joint.angle.get());
 	}
 
 	public FloatQuaternion getGlobalRotation() {
@@ -114,7 +120,7 @@ public class Bone implements Comparable<Bone>, Drawable<HApplet>, Lockable {
 	}
 
 	public FloatVector3 getGlobalTranslation() {
-		return globalTranslation;
+		return globalTranslation.get();
 	}
 
 	public FloatVector3 getLocalDirectionUV() {
@@ -138,12 +144,12 @@ public class Bone implements Comparable<Bone>, Drawable<HApplet>, Lockable {
 	}
 
 	public FloatVector3 getEndPoint() {
-		return globalTranslation;
+		return globalTranslation.get();
 	}
 
 	public FloatVector3 getStartPoint() {
 		if (id > 0) {
-			return prev.globalTranslation;
+			return prev.globalTranslation.get();
 		}
 		return chain.globalTranslation;
 	}
@@ -162,12 +168,12 @@ public class Bone implements Comparable<Bone>, Drawable<HApplet>, Lockable {
 	public void recalculateTransformation() {
 		if (id > 0) {
 			globalRotation = prev.globalRotation
-					.mul(FloatQuaternion.createQuaternionDegs(joint.rotationAxis, joint.angle));
-			globalTranslation = prev.globalTranslation.add(globalRotation.mul(link.direction));
+					.mul(FloatQuaternion.createQuaternionDegs(joint.rotationAxis, joint.angle.get()));
+			globalTranslation.set(prev.globalTranslation.get().add(globalRotation.mul(link.direction)));
 		} else {
 			globalRotation = chain.globalRotation
-					.mul(FloatQuaternion.createQuaternionDegs(joint.rotationAxis, joint.angle));
-			globalTranslation = chain.globalTranslation.add(globalRotation.mul(link.direction));
+					.mul(FloatQuaternion.createQuaternionDegs(joint.rotationAxis, joint.angle.get()));
+			globalTranslation.set(chain.globalTranslation.add(globalRotation.mul(link.direction)));
 		}
 	}
 
@@ -180,11 +186,11 @@ public class Bone implements Comparable<Bone>, Drawable<HApplet>, Lockable {
 	}
 
 	public float getAngleRads() {
-		return joint.angle * Utils.DEGS_TO_RADS;
+		return joint.angle.get() * Utils.DEGS_TO_RADS;
 	}
 
 	public float getAngleDegs() {
-		return joint.angle;
+		return joint.angle.get();
 	}
 
 	public void setAngleRads(float angleRads) {
@@ -219,7 +225,7 @@ public class Bone implements Comparable<Bone>, Drawable<HApplet>, Lockable {
 	@Override
 	public void lock() {
 		globalRotationLock = globalRotation;
-		globalTranslationLock = globalTranslation;
+		globalTranslationLock = globalTranslation.get();
 		joint.lock();
 		locked = true;
 	}
@@ -227,7 +233,7 @@ public class Bone implements Comparable<Bone>, Drawable<HApplet>, Lockable {
 	@Override
 	public void unlock() {
 		globalRotation = globalRotationLock;
-		globalTranslation = globalTranslationLock;
+		globalTranslation.set(globalTranslationLock);
 		joint.unlock();
 		locked = false;
 	}
@@ -274,7 +280,7 @@ public class Bone implements Comparable<Bone>, Drawable<HApplet>, Lockable {
 		FloatVector3 start;
 		if (id > 0) {
 			if(!locked) {
-				start = prev.globalTranslation;
+				start = prev.globalTranslation.get();
 			} else {
 				start = prev.globalTranslationLock;
 			}
@@ -284,6 +290,7 @@ public class Bone implements Comparable<Bone>, Drawable<HApplet>, Lockable {
 		}
 		
 		FloatVector3 norm = rot.mul(joint.rotationAxis);
+		drawer.noStroke();
 		drawer.cylinder(start.add(norm.mul(2)), start.add(norm.mul(-2)), prependicular, 5, 5, 12);
 	}
 

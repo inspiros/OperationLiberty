@@ -1,5 +1,7 @@
 package com.hust.utils;
 
+import com.hust.utils.data.FloatVector3;
+
 public class ArrayUtils {
 
 	public static void print(float... arr) {

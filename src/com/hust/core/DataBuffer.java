@@ -2,7 +2,7 @@ package com.hust.core;
 
 import com.hust.robot.Chain;
 import com.hust.robot.KinematicsSolver;
-import com.hust.utils.FloatVector3;
+import com.hust.utils.data.FloatVector3;
 
 /**
  * A buffer class for storing data and communicating with other classes.
@@ -12,13 +12,9 @@ import com.hust.utils.FloatVector3;
  */
 public class DataBuffer {
 
-	public static final int SLEEP_TIME = 25;
-
 	private Chain robot;
 
 	private KinematicsSolver kinematicsSolver;
-
-	private int dof;
 
 	public static DataBuffer setupModel() {
 		DataBuffer res = new DataBuffer();
@@ -33,8 +29,6 @@ public class DataBuffer {
 		res.kinematicsSolver = new KinematicsSolver();
 		res.kinematicsSolver.setChain(res.robot);
 
-		res.dof = res.robot.getDof();
-
 		return res;
 	}
 
@@ -47,7 +41,7 @@ public class DataBuffer {
 	}
 
 	public int getDof() {
-		return dof;
+		return robot.getDof();
 	}
 
 	public float[] getAnglesDegs() {

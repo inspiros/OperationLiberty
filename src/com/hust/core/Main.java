@@ -1,24 +1,32 @@
 package com.hust.core;
 
+import java.io.IOException;
+import java.util.Locale;
 import java.util.Scanner;
 
+import com.hust.utils.Utils;
 import com.hust.view.PWindow;
+import com.hust.view.javafx.FxApplication;
 //import com.pi4j.wiringpi.Gpio;
 
 public class Main {
-	public static boolean hasView;
 
-	public static PWindow view;
+	public static FxApplication view;
+
+	public static PWindow demo;
 
 	public static DataBuffer dataBuffer;
 
-	public static void main(String[] args) {
+	public void start() throws IOException {
+		Utils.PROPERTIES.load(getClass().getResourceAsStream("/resources/config.properties"));
+		checkPlatform();
+
 		ControllerExceptionHandler controllerExceptionHandler = new ControllerExceptionHandler();
 
 		Thread.setDefaultUncaughtExceptionHandler(controllerExceptionHandler);
-		
+
 		dataBuffer = DataBuffer.setupModel();
-		hasView = initiateView();
+		initiateView();
 
 		// Gpio.wiringPiSetup();
 
@@ -28,16 +36,15 @@ public class Main {
 		// pinOut.toggle();
 		// SleepUtils.delay(1000);
 		// }
-		
-		//model.getArm().forwardKinematics();
+
 		@SuppressWarnings("resource")
 		Scanner scanner = new Scanner(System.in);
-		while(true) {
+		while (true) {
 			System.err.print("Insert command: ");
 			String cmd = scanner.nextLine();
-			
-			if(cmd.equalsIgnoreCase("A")) {
-				for(int i = 0; i < dataBuffer.getDof(); i++) {
+
+			if (cmd.equalsIgnoreCase("A")) {
+				for (int i = 0; i < dataBuffer.getDof(); i++) {
 					dataBuffer.getArm().getBone(i).getEndPoint().print();
 				}
 			}
@@ -45,13 +52,43 @@ public class Main {
 		}
 	}
 
-
-	private static boolean initiateView() {
-		try {
-			view = new PWindow(dataBuffer);
-		} catch (Exception e) {
-			return false;
+	private void checkPlatform() {
+		String osProperty;
+		String detectedOs = System.getProperty("os.name", "generic").toLowerCase(Locale.ENGLISH);
+		if ((detectedOs.indexOf("mac") >= 0) || (detectedOs.indexOf("darwin") >= 0)) {
+			osProperty = "MAC";
+		} else if (detectedOs.indexOf("win") >= 0) {
+			osProperty = "WINDOWS";
+		} else if (detectedOs.indexOf("nux") >= 0) {
+			osProperty = "LINUX";
+		} else {
+			osProperty = "OTHER";
 		}
-		return true;
+		Utils.PROPERTIES.put("platform", osProperty);
 	}
+
+	private void initiateView() {
+		try {
+			if (Boolean.parseBoolean(Utils.PROPERTIES.getProperty("demo"))
+					&& Utils.PROPERTIES.getProperty("platform") != "LINUX") {
+				demo = new PWindow();
+			}
+			if (Boolean.parseBoolean(Utils.PROPERTIES.getProperty("view"))) {
+				view = FxApplication.getInstance();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Real Main Method.
+	 * 
+	 * @param args
+	 * @throws IOException
+	 */
+	public static void main(String[] args) throws IOException {
+		new Main().start();
+	}
+
 }

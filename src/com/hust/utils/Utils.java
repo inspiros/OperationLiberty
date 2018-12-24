@@ -4,13 +4,18 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.text.DecimalFormat;
+import java.util.Properties;
 import java.util.Random;
+
+import com.hust.utils.data.FloatVector3;
 
 /**
  * Class : A series of static utility / helper methods to perform common
  * operations. Version: 0.4 Date : 04/12/2015
  */
 public final class Utils {
+	public static final Properties PROPERTIES = new Properties();
+
 	// Constants to translate values from degrees to radians and vice versa
 	public static final float DEGS_TO_RADS = (float) Math.PI / 180.0f;
 	public static final float RADS_TO_DEGS = 180.0f / (float) Math.PI;

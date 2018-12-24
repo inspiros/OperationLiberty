@@ -1,0 +1,115 @@
+.combo-box {
+	-fx-text-fill: white;
+}
+
+.combo-box .list-cell {
+    -fx-background: grey;
+    -fx-background-color: transparent;
+    -fx-text-fill: white;
+    -fx-padding: 3.0 0.0 2.0 7.0;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: grey, #4A4A4A;
+    -fx-background-insets: 0.0, 1.0;
+}
+
+.scroll-pane > .viewport {
+   -fx-background-color: transparent;
+}
+
+.slider .track {
+	-fx-pref-height: 6.0;
+}
+
+.slider .axis {
+	-fx-tick-label-fill: white;
+}
+
+/* */
+.scroll-pane
+{
+    -fx-background-color: transparent;
+}
+
+.scroll-pane .scroll-bar:vertical
+{
+    -fx-background-color: transparent;
+    -fx-background-radius: 0.0;
+}
+
+.scroll-pane .scroll-bar:vertical .track
+{
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 0.0em;
+    -fx-border-radius: 2.0em;
+}
+
+.scroll-pane .scroll-bar:horizontal .decrement-button,
+.scroll-pane .scroll-bar:horizontal .increment-button
+{
+    -fx-background-color: transparent;
+    -fx-background-radius: 0.0em;
+    -fx-padding: 0.0 0.0 10.0 0.0;
+}
+
+.scroll-pane .scroll-bar:vertical .decrement-button,
+.scroll-pane .scroll-bar:vertical .increment-button
+{
+
+    -fx-background-color: transparent;
+    -fx-background-radius: 0.0em;
+    -fx-padding: 0.0 10.0 0.0 0.0;
+}
+
+.scroll-pane .scroll-bar .increment-arrow,
+.scroll-pane .scroll-bar .decrement-arrow
+{
+    -fx-padding: -2.0;
+}
+
+.scroll-pane .scroll-bar:vertical .thumb
+{
+    -fx-background-color: derive(black,90.0%);
+    -fx-background-insets: 2.0, 0.0, 0.0;
+    -fx-background-radius: 2.0em;
+    -fx-pref-width: 10.0;
+}
+
+/*TablPane styling*/
+.tab{
+    -fx-background-color: transparent ;
+}
+
+.tab-header-background{
+    -fx-background-color: transparent ;
+}
+
+.tab-label{
+    -fx-text-fill: aqua ;
+    -fx-font-size: 9.0pt;
+}
+
+
+.tab-main{
+    -fx-pref-height : 60.0;
+    -fx-max-height : 60.0;
+}
+
+.settings-tab{
+    -fx-background-color: transparent;
+    -fx-padding: 5.0px 10.0px 5.0px 10.0px;
+}
+
+.settings-tab:selected{
+    -fx-background-color: transparent;
+}
+
+.settings-tab:selected .tab-label{
+    -fx-text-fill: transparent ;
+}
+
+.settings-tab .tab-header-background{
+    -fx-background-color: transparent ;
+}

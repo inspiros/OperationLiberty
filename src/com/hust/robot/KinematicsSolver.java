@@ -3,7 +3,7 @@ package com.hust.robot;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hust.utils.FloatVector3;
+import com.hust.utils.data.FloatVector3;
 
 public class KinematicsSolver {
 

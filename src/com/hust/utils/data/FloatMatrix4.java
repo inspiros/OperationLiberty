@@ -1,6 +1,8 @@
-package com.hust.utils;
+package com.hust.utils.data;
 
 import java.text.DecimalFormat;
+
+import com.hust.utils.Utils;
 
 /**
  * A class to represent a 4x4 matrix.
