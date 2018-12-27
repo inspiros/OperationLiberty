@@ -61,9 +61,11 @@ public class FxApplication extends Application {
 
 		primaryStage.setOnCloseRequest((e) -> {
 			if (Main.demo != null) {
-				Main.demo.exit();
-				Platform.exit();
+				Platform.runLater(() -> {
+					Main.demo.exit();
+				});
 			} else {
+				Platform.exit();
 				System.exit(0);
 			}
 		});

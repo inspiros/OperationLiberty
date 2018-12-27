@@ -116,7 +116,7 @@ public class FxApplicationController implements Initializable {
 		rippler = new JFXRippler(jstLabelPane);
 		anchorPane3.getChildren().add(rippler);
 		JFXDepthManager.setDepth(anchorPane3, 5);
-		
+
 		// Forward Kinematics Pane
 		jfxComboBoxChoices = new ArrayList<>();
 		jfxComboBoxChoices.add("None");
@@ -126,6 +126,7 @@ public class FxApplicationController implements Initializable {
 		jfxComboBoxChoices.trimToSize();
 		jfxComboBox.getItems().addAll(jfxComboBoxChoices);
 
+		// Position listener.
 		jfxComboBox.valueProperty().addListener((observable, oldValue, newValue) -> {
 			// Minus 1 as we added a None choice
 			listenedId = jfxComboBoxChoices.indexOf(newValue) - 1;
@@ -139,8 +140,10 @@ public class FxApplicationController implements Initializable {
 				listenedId = Integer.MIN_VALUE;
 			} else {
 				reactToPropertyChanges(listenedId, data.getArm().getBone(listenedId).globalTranslation.get());
-			}
+			}	
 		});
+		
+		// TODO Angle listener.
 
 	}
 
@@ -194,6 +197,10 @@ public class FxApplicationController implements Initializable {
 			throw new RuntimeException("Target position required!");
 		}
 
+		if (Main.demo != null) {
+			// TODO Demo
+			Main.demo.updateTarget(newPosition);
+		}
 		// Ready to move.
 		data.moveToPosition(newPosition,
 				KinematicsSolver.IKMethod.values()[(int) ikToggleGroup.getSelectedToggle().getUserData()]);
