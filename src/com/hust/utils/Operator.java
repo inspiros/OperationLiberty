@@ -1,5 +1,9 @@
 package com.hust.utils;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+
 import com.hust.core.Configuration;
 
 public abstract class Operator implements Runnable {
@@ -7,41 +11,32 @@ public abstract class Operator implements Runnable {
 	
 	protected long operatedTime;
 
-	public Thread thread;
+	public ExecutorService executorService = Executors.newCachedThreadPool();
+	
+	public Future<?> future;
 
 	public void setSleepTime(long millis) {
 		this.sleepTime = millis;
 	}
 
-	public void setThread(Thread thread) {
-		this.thread = thread;
-	}
-
-	public void startThread(Thread thread) {
-		this.thread = thread;
-		thread.start();
-	}
+//	public void setThread(Thread thread) {
+//		this.thread = thread;
+//	}
+//
+//	public void startThread(Thread thread) {
+//		this.thread = thread;
+//		thread.start();
+//	}
 
 	public synchronized void start() {
-		if (thread != null) {
-			thread.start();
-		} else {
-			Thread newThread = new Thread(this);
-			thread = newThread;
-			thread.start();
-		}
+		operatedTime = 0;
+		future = executorService.submit(this);
 	}
 
 	public synchronized void abort() {
-		if (thread != null) {
-			thread.interrupt();
-			try {
-				if (thread != null) {
-					thread.join();
-				}
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+		if (future != null) {
+			future.cancel(true);
+			future = null;
 		}
 	}
 
@@ -66,8 +61,7 @@ public abstract class Operator implements Runnable {
 			}
 		}
 		terminate();
-		operatedTime = 0;
-		thread = null;
+		future = null;
 	}
 
 }

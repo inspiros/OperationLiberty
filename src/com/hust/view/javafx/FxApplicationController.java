@@ -19,6 +19,8 @@ import com.jfoenix.controls.JFXToggleNode;
 import com.jfoenix.effects.JFXDepthManager;
 
 import javafx.application.Platform;
+import javafx.concurrent.Service;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -183,7 +185,30 @@ public class FxApplicationController implements Initializable {
 		jstLSPB.setUserData(Joint.TrajectoryMethod.LSPB.ordinal());
 		jstLSQB.setUserData(Joint.TrajectoryMethod.LSQB.ordinal());
 		jstExponential.setUserData(Joint.TrajectoryMethod.EXPONENTIAL.ordinal());
+		
+		positionSyncService0 = new FxSceneSyncService<FloatVector3>() {
+			
+			@Override
+			public void doTask() {
+				startingPointLbl0.textProperty().setValue(Utils.DECIMAL_FORMAT.format(currentVal.x));
+				startingPointLbl1.textProperty().setValue(Utils.DECIMAL_FORMAT.format(currentVal.y));
+				startingPointLbl2.textProperty().setValue(Utils.DECIMAL_FORMAT.format(currentVal.z));
+			}
+		};
+
+		positionSyncService1 = new FxSceneSyncService<FloatVector3>() {
+			
+			@Override
+			public void doTask() {
+				endPointLbl0.textProperty().setValue(Utils.DECIMAL_FORMAT.format(currentVal.x));
+				endPointLbl1.textProperty().setValue(Utils.DECIMAL_FORMAT.format(currentVal.y));
+				endPointLbl2.textProperty().setValue(Utils.DECIMAL_FORMAT.format(currentVal.z));
+			}
+		};
 	}
+	
+	private FxSceneSyncService<FloatVector3> positionSyncService0;
+	private FxSceneSyncService<FloatVector3> positionSyncService1;
 
 	@FXML
 	private void onSetTarget(ActionEvent event) {
@@ -194,7 +219,7 @@ public class FxApplicationController implements Initializable {
 			newPosition.y = Float.parseFloat(targetLbl1.textProperty().get());
 			newPosition.z = Float.parseFloat(targetLbl2.textProperty().get());
 		} else {
-			throw new RuntimeException("Target position required!");
+			return;
 		}
 
 		if (Main.demo != null) {
@@ -208,30 +233,68 @@ public class FxApplicationController implements Initializable {
 
 	private void reactToPropertyChanges(int id, FloatVector3 newValue) {
 		if (id == listenedId) {
-			new Thread(() -> {
-				// DO SOMETHING WITH CONTROLS ON FX THREAD ACCORDING RESULT OF OVER
-				Platform.runLater(() -> {
-					endPointLbl0.textProperty().setValue(Utils.DECIMAL_FORMAT.format(newValue.x));
-					endPointLbl1.textProperty().setValue(Utils.DECIMAL_FORMAT.format(newValue.y));
-					endPointLbl2.textProperty().setValue(Utils.DECIMAL_FORMAT.format(newValue.z));
-					if (id == 0) {
-						FloatVector3 translation = data.getArm().globalTranslation;
-						startingPointLbl0.textProperty().setValue(Utils.DECIMAL_FORMAT.format(translation.x));
-						startingPointLbl1.textProperty().setValue(Utils.DECIMAL_FORMAT.format(translation.y));
-						startingPointLbl2.textProperty().setValue(Utils.DECIMAL_FORMAT.format(translation.z));
-					}
-				});
-			}).start();
+			positionSyncService1.addNewTask(newValue);
+			if(id == 0) {
+				positionSyncService0.addNewTask(data.getArm().globalTranslation);
+			}
+//			Thread t = new Thread(new Task<Void>() {
+//
+//				@Override
+//				protected Void call() throws Exception {
+//					endPointLbl0.setText(Float.toString(newValue.x));
+//					endPointLbl1.setText(Float.toString(newValue.y));
+//					endPointLbl2.setText(Float.toString(newValue.z));
+//					if (id == 0) {
+//						FloatVector3 translation = data.getArm().globalTranslation;
+//						startingPointLbl0.setText(Float.toString(translation.x));
+//						startingPointLbl1.setText(Float.toString(translation.y));
+//						startingPointLbl2.setText(Float.toString(translation.z));
+//					}
+//					return null;
+//				}
+//			});
+//			t.setDaemon(true);
+//			t.start();
 		} else if (id == listenedId - 1) {
-			new Thread(() -> {
-				// DO SOMETHING WITH CONTROLS ON FX THREAD ACCORDING RESULT OF OVER
-				Platform.runLater(() -> {
-					startingPointLbl0.textProperty().setValue(Utils.DECIMAL_FORMAT.format(newValue.x));
-					startingPointLbl1.textProperty().setValue(Utils.DECIMAL_FORMAT.format(newValue.y));
-					startingPointLbl2.textProperty().setValue(Utils.DECIMAL_FORMAT.format(newValue.z));
-				});
-			}).start();
+			positionSyncService0.addNewTask(newValue);
+//			Thread t = new Thread(new Task<Void>() {
+//
+//				@Override
+//				protected Void call() throws Exception {
+//					startingPointLbl0.setText(Float.toString(newValue.x));
+//					startingPointLbl1.setText(Float.toString(newValue.y));
+//					startingPointLbl2.setText(Float.toString(newValue.z));
+//					return null;
+//				}
+//			});
+//			t.setDaemon(true);
+//			t.start();
 		}
+//		if (id == listenedId) {
+//			new Thread(() -> {
+//				// DO SOMETHING WITH CONTROLS ON FX THREAD ACCORDING RESULT OF OVER
+//				Platform.runLater(() -> {
+//					endPointLbl0.textProperty().setValue(Utils.DECIMAL_FORMAT.format(newValue.x));
+//					endPointLbl1.textProperty().setValue(Utils.DECIMAL_FORMAT.format(newValue.y));
+//					endPointLbl2.textProperty().setValue(Utils.DECIMAL_FORMAT.format(newValue.z));
+//					if (id == 0) {
+//						FloatVector3 translation = data.getArm().globalTranslation;
+//						startingPointLbl0.textProperty().setValue(Utils.DECIMAL_FORMAT.format(translation.x));
+//						startingPointLbl1.textProperty().setValue(Utils.DECIMAL_FORMAT.format(translation.y));
+//						startingPointLbl2.textProperty().setValue(Utils.DECIMAL_FORMAT.format(translation.z));
+//					}
+//				});
+//			}).start();
+//		} else if (id == listenedId - 1) {
+//			new Thread(() -> {
+//				// DO SOMETHING WITH CONTROLS ON FX THREAD ACCORDING RESULT OF OVER
+//				Platform.runLater(() -> {
+//					startingPointLbl0.textProperty().setValue(Utils.DECIMAL_FORMAT.format(newValue.x));
+//					startingPointLbl1.textProperty().setValue(Utils.DECIMAL_FORMAT.format(newValue.y));
+//					startingPointLbl2.textProperty().setValue(Utils.DECIMAL_FORMAT.format(newValue.z));
+//				});
+//			}).start();
+//		}
 	}
 
 	private void initializePositioner() {
