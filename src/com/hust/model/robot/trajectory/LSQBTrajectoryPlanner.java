@@ -1,4 +1,4 @@
-package com.hust.robot.trajectory;
+package com.hust.model.robot.trajectory;
 
 public class LSQBTrajectoryPlanner extends JointTrajectoryPlanner {
 	private float coefficientA, thetaC, thetaD, factor3ac, factor4ac, factor3df, factor4df;

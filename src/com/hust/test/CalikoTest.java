@@ -1,9 +1,5 @@
 package com.hust.test;
-//
-//import com.hust.core.DataBuffer;
-//import com.hust.robot.Chain;
-//import com.hust.utils.ArrayUtils;
-import com.hust.view.HApplet;
+import com.hust.view.demo.HApplet;
 //
 //import au.edu.federation.caliko.FabrikBone3D;
 //import au.edu.federation.caliko.FabrikChain3D;

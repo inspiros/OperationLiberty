@@ -4,8 +4,9 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.Scanner;
 
+import com.hust.actuator.Actuators;
 import com.hust.utils.Utils;
-import com.hust.view.PWindow;
+import com.hust.view.demo.PWindow;
 import com.hust.view.javafx.FxApplication;
 //import com.pi4j.wiringpi.Gpio;
 
@@ -15,9 +16,11 @@ public class Main {
 
 	public static PWindow demo;
 
-	public static DataBuffer dataBuffer;
+	public static Models model;
 
-	public void start() throws IOException {
+	public static Actuators actuator;
+
+	public void start() throws IOException, InterruptedException {
 		Utils.PROPERTIES.load(getClass().getResourceAsStream("/resources/config.properties"));
 		checkPlatform();
 
@@ -25,7 +28,8 @@ public class Main {
 
 		Thread.setDefaultUncaughtExceptionHandler(controllerExceptionHandler);
 
-		dataBuffer = DataBuffer.setupModel();
+		model = Models.setupModel();
+		actuator = new Actuators(model).setupActuators();
 		initiateView();
 
 		// Gpio.wiringPiSetup();
@@ -37,19 +41,35 @@ public class Main {
 		// SleepUtils.delay(1000);
 		// }
 
-		@SuppressWarnings("resource")
-		Scanner scanner = new Scanner(System.in);
-		while (true) {
-			System.err.print("Insert command: ");
-			String cmd = scanner.nextLine();
-
-			if (cmd.equalsIgnoreCase("A")) {
-				for (int i = 0; i < dataBuffer.getDof(); i++) {
-					dataBuffer.getArm().getBone(i).getEndPoint().print();
-				}
-			}
-			System.out.println();
-		}
+//		@SuppressWarnings("resource")
+//		Scanner scanner = new Scanner(System.in);
+//		while (true) {
+//			System.err.print("Insert command: ");
+//			String cmd = scanner.nextLine();
+//
+//			if (cmd.equalsIgnoreCase("A")) {
+//				for (int i = 0; i < model.getDof(); i++) {
+//					model.getArm().getBone(i).getEndPoint().print();
+//				}
+//			}
+//			System.out.println();
+//		}
+//		
+//		try {
+//			Thread.sleep(5000);
+//			while(true) {
+//				Thread[] list = new Thread[Thread.currentThread().getThreadGroup().activeCount()];
+//				Thread.currentThread().getThreadGroup().enumerate(list);
+//				for (Thread thread : list) {
+//					System.out.println(thread.getName() + " " + thread.getState().toString());
+//				}
+//				Thread.sleep(5000);
+//			}
+//		} catch (InterruptedException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		Thread.currentThread().join();
 	}
 
 	private void checkPlatform() {
@@ -68,6 +88,7 @@ public class Main {
 	}
 
 	private void initiateView() {
+		// Might run on headless devices.
 		try {
 			if (Boolean.parseBoolean(Utils.PROPERTIES.getProperty("demo"))
 					&& Utils.PROPERTIES.getProperty("platform") != "LINUX") {
@@ -86,8 +107,9 @@ public class Main {
 	 * 
 	 * @param args
 	 * @throws IOException
+	 * @throws InterruptedException
 	 */
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, InterruptedException {
 		new Main().start();
 	}
 

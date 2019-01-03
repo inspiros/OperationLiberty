@@ -1,4 +1,4 @@
-package com.hust.robot;
+package com.hust.model.robot;
 
 public interface CommandListener {
 

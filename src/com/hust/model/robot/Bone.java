@@ -1,11 +1,11 @@
-package com.hust.robot;
+package com.hust.model.robot;
 
 import com.hust.utils.Utils;
 import com.hust.utils.data.FloatMatrix4;
 import com.hust.utils.data.FloatQuaternion;
 import com.hust.utils.data.FloatVector3;
-import com.hust.view.Drawable;
-import com.hust.view.HApplet;
+import com.hust.view.demo.Drawable;
+import com.hust.view.demo.HApplet;
 
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -193,29 +193,38 @@ public class Bone implements Comparable<Bone>, Drawable<HApplet>, Lockable {
 		return joint.angle.get();
 	}
 
-	public void setAngleRads(float angleRads) {
-		joint.setAngleRads(angleRads);
-	}
-
-	public void setAngleDegs(float angleDegs) {
-		joint.setAngleDegs(angleDegs);
-	}
-
-	public void updateAngleRads(float changeRads) {
-		joint.updateAngleRads(changeRads);
-	}
-
-	public void updateAngleDegs(float changeDegs) {
-		joint.updateAngleDegs(changeDegs);
-	}
-
-	public void setTargetRads(float angleRads) {
-		joint.setTargetRads(angleRads);
-	}
-
-	public void setTargetDegs(float angleDegs) {
-		joint.setTargetDegs(angleDegs);
-	}
+//	Removed in purpose of improving performance.
+//	public void setAngleRads(float angleRads) {
+//		joint.setAngleRads(angleRads);
+//	}
+//
+//	public void setAngleDegs(float angleDegs) {
+//		joint.setAngleDegs(angleDegs);
+//	}
+//
+//	public void updateAngleRads(float changeRads) {
+//		joint.updateAngleRads(changeRads);
+//	}
+//
+//	public void updateAngleDegs(float changeDegs) {
+//		joint.updateAngleDegs(changeDegs);
+//	}
+//
+//	public void setTargetRads(float angleRads) {
+//		joint.setTargetRads(angleRads);
+//	}
+//
+//	public void setTargetDegs(float angleDegs) {
+//		joint.setTargetDegs(angleDegs);
+//	}
+//	
+//	public void prepareTargetRads(float angleRads) {
+//		joint.prepareTargetRads(angleRads);
+//	}
+//	
+//	public void prepareTargetDegs(float angleDegs) {
+//		joint.prepareTargetDegs(angleDegs);
+//	}
 
 	@Override
 	public int compareTo(Bone o) {
@@ -294,7 +303,4 @@ public class Bone implements Comparable<Bone>, Drawable<HApplet>, Lockable {
 		drawer.cylinder(start.add(norm.mul(2)), start.add(norm.mul(-2)), prependicular, 5, 5, 12);
 	}
 
-	@Override
-	public void setupDrawer(HApplet drawer) {
-	}
 }

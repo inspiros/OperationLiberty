@@ -1,6 +1,7 @@
 package com.hust.view.javafx;
 
 import com.hust.core.Main;
+import com.hust.utils.Utils;
 
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -41,6 +42,7 @@ public class FxApplication extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		stage = primaryStage;
+
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Application.fxml"));
 		Parent parent = loader.load();
 		controller = loader.getController();
@@ -69,6 +71,10 @@ public class FxApplication extends Application {
 				System.exit(0);
 			}
 		});
+
+		if (Boolean.parseBoolean(Utils.PROPERTIES.getProperty("view.fullscreen"))) {
+			primaryStage.setFullScreen(true);
+		}
 
 		primaryStage.show();
 	}

@@ -1,4 +1,4 @@
-package com.hust.view;
+package com.hust.view.demo;
 
 public class Target {
 

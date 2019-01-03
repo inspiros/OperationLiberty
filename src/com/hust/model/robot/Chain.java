@@ -1,16 +1,14 @@
-package com.hust.robot;
+package com.hust.model.robot;
 
 import java.util.ArrayList;
 
-import com.hust.utils.DataChangeListener;
 import com.hust.utils.data.FloatMatrix4;
 import com.hust.utils.data.FloatQuaternion;
 import com.hust.utils.data.FloatVector3;
-import com.hust.view.Drawable;
-import com.hust.view.HApplet;
-import com.hust.view.PWindow;
+import com.hust.view.demo.Drawable;
+import com.hust.view.demo.HApplet;
 
-public class Chain implements DataChangeListener<Float>, Drawable<HApplet> {
+public class Chain implements Drawable<HApplet>, Lockable {
 	public String name;
 
 	// private HApplet app;
@@ -24,9 +22,7 @@ public class Chain implements DataChangeListener<Float>, Drawable<HApplet> {
 	 */
 	public FloatVector3 globalTranslation;
 
-	private ArrayList<Bone> bones = new ArrayList<Bone>();
-
-	private ArrayList<FloatVector3> pointsLock = new ArrayList<FloatVector3>();
+	public ArrayList<Bone> bones = new ArrayList<Bone>();
 
 	public Chain() {
 		globalRotation = new FloatQuaternion(0, 0, 0, 1);
@@ -47,9 +43,6 @@ public class Chain implements DataChangeListener<Float>, Drawable<HApplet> {
 		Bone bone = new Bone(this, direction, rotationAxis, angle, lowerLimit, upperLimit);
 		bones.add(bone);
 		bones.trimToSize();
-		
-		pointsLock.add(FloatVector3.ZERO);
-		pointsLock.trimToSize();
 	}
 
 	public Bone getBaseBone() {
@@ -135,67 +128,90 @@ public class Chain implements DataChangeListener<Float>, Drawable<HApplet> {
 	public void setAnglesRads(float... anglesRads) {
 		int loops = Math.min(bones.size(), anglesRads.length);
 		for (int i = 0; i < loops; i++) {
-			bones.get(i).setAngleRads(anglesRads[i]);
+			bones.get(i).joint.setAngleRads(anglesRads[i]);
 		}
 	}
 
 	public void setAnglesDegs(float... anglesDegs) {
 		int loops = Math.min(bones.size(), anglesDegs.length);
 		for (int i = 0; i < loops; i++) {
-			bones.get(i).setAngleDegs(anglesDegs[i]);
+			bones.get(i).joint.setAngleDegs(anglesDegs[i]);
 		}
 	}
 
 	public void setAngleRads(int id, float angleRads) {
-		bones.get(id).setAngleRads(angleRads);
+		bones.get(id).joint.setAngleRads(angleRads);
 	}
 
 	public void setAngleDegs(int id, float angleDegs) {
-		bones.get(id).setAngleDegs(angleDegs);
+		bones.get(id).joint.setAngleDegs(angleDegs);
 	}
 
 	public void updateAnglesRads(float... anglesRads) {
 		int loops = Math.min(bones.size(), anglesRads.length);
 		for (int i = 0; i < loops; i++) {
-			bones.get(i).updateAngleRads(anglesRads[i]);
+			bones.get(i).joint.updateAngleRads(anglesRads[i]);
 		}
 	}
 
 	public void updateAnglesDegs(float... anglesDegs) {
 		int loops = Math.min(bones.size(), anglesDegs.length);
 		for (int i = 0; i < loops; i++) {
-			bones.get(i).updateAngleDegs(anglesDegs[i]);
+			bones.get(i).joint.updateAngleDegs(anglesDegs[i]);
 		}
 	}
 
 	public void updateAngleRads(int id, float angleRads) {
-		bones.get(id).updateAngleRads(angleRads);
+		bones.get(id).joint.updateAngleRads(angleRads);
 	}
 
 	public void updateAngleDegs(int id, float angleDegs) {
-		bones.get(id).updateAngleDegs(angleDegs);
+		bones.get(id).joint.updateAngleDegs(angleDegs);
 	}
 
 	public void setTargetsRads(float... anglesRads) {
 		int loops = Math.min(bones.size(), anglesRads.length);
 		for (int i = 0; i < loops; i++) {
-			bones.get(i).setTargetRads(anglesRads[i]);
+			bones.get(i).joint.setTargetRads(anglesRads[i]);
 		}
 	}
 
 	public void setTargetsDegs(float... anglesDegs) {
 		int loops = Math.min(bones.size(), anglesDegs.length);
 		for (int i = 0; i < loops; i++) {
-			bones.get(i).setTargetDegs(anglesDegs[i]);
+			bones.get(i).joint.setTargetDegs(anglesDegs[i]);
 		}
 	}
 
 	public void setTargetRads(int id, float angleRads) {
-		bones.get(id).setTargetRads(angleRads);
+		bones.get(id).joint.setTargetRads(angleRads);
 	}
 
 	public void setTargetDegs(int id, float angleDegs) {
-		bones.get(id).setTargetDegs(angleDegs);
+		bones.get(id).joint.setTargetDegs(angleDegs);
+	}
+
+	public void prepareTargetsRads(float... anglesRads) {
+		int loops = Math.min(bones.size(), anglesRads.length);
+		for (int i = 0; i < loops; i++) {
+			bones.get(i).joint.prepareTargetRads(anglesRads[i]);
+		}
+	}
+
+	public void prepareTargetsDegs(float... anglesDegs) {
+		int loops = Math.min(bones.size(), anglesDegs.length);
+		for (int i = 0; i < loops; i++) {
+			bones.get(i).joint.prepareTargetDegs(anglesDegs[i]);
+		}
+	}
+
+	/**
+	 * Use with prepare target to start trajectory silmutanously in all joints.
+	 */
+	public void actuate() {
+		for (int i = 0; i < bones.size(); i++) {
+			bones.get(i).joint.updateToTarget();
+		}
 	}
 
 	public void abortTargetFollowing() {
@@ -219,10 +235,8 @@ public class Chain implements DataChangeListener<Float>, Drawable<HApplet> {
 	}
 
 	public void lock() {
-		pointsLock.add(bones.get(0).getStartPoint());
 		for (int i = 0; i < bones.size(); i++) {
 			bones.get(i).lock();
-			pointsLock.add(bones.get(i).getEndPoint());
 		}
 	}
 
@@ -231,42 +245,19 @@ public class Chain implements DataChangeListener<Float>, Drawable<HApplet> {
 			bones.get(i).unlock();
 		}
 		recalculateTransformations();
-		pointsLock.clear();
-	}
-
-	@Override
-	public void dataChanged(int id) {
-		recalculateTransformation(id);
-	}
-
-	@Override
-	public void dataChangedTo(int id, Float value) {
 	}
 
 	public void render(HApplet drawer) {
 		drawer.pushMatrix();
 		drawer.pushStyle();
-		
-		//drawer.fill(180);
-		renderBones(drawer);
 
-		//drawer.fill(180);
-		//drawer.cylinder(14, 12, 6, 10);
-		drawer.popMatrix();
-		drawer.popStyle();
-	}
-
-	private void renderBones(HApplet drawer) {
 		for (Bone b : bones) {
 			b.render(drawer);
 		}
-	}
-
-	@Override
-	public void setupDrawer(HApplet drawer) {
-		for (int i = 0; i < bones.size(); i++) {
-			bones.get(i).joint.addDataAmountChangeListener((PWindow) drawer);
-		}
+		// drawer.fill(180);
+		// drawer.cylinder(14, 12, 6, 10);
+		drawer.popMatrix();
+		drawer.popStyle();
 	}
 
 }

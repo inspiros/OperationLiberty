@@ -1,7 +1,7 @@
 package com.hust.core;
 
-import com.hust.robot.Chain;
-import com.hust.robot.KinematicsSolver;
+import com.hust.model.robot.Chain;
+import com.hust.model.robot.kinematics.KinematicsSolver;
 import com.hust.utils.data.FloatVector3;
 
 /**
@@ -10,14 +10,14 @@ import com.hust.utils.data.FloatVector3;
  * @author Inspiros
  *
  */
-public class DataBuffer {
+public class Models {
 
 	private Chain robot;
 
 	private KinematicsSolver kinematicsSolver;
 
-	public static DataBuffer setupModel() {
-		DataBuffer res = new DataBuffer();
+	public static Models setupModel() {
+		Models res = new Models();
 
 		res.robot = new Chain();
 		res.robot.addConsecutiveBone(new FloatVector3(0, 0, 50), FloatVector3.Z_AXIS, 0, -180, 180);
@@ -26,14 +26,13 @@ public class DataBuffer {
 		res.robot.addConsecutiveBone(new FloatVector3(0, 0, 30), FloatVector3.Y_AXIS, 45, -120, 120);
 		res.robot.addConsecutiveBone(new FloatVector3(0, 0, 20), FloatVector3.Y_AXIS, 0, -120, 120);
 
-		res.kinematicsSolver = new KinematicsSolver();
 		res.kinematicsSolver.setChain(res.robot);
 
 		return res;
 	}
 
-	private DataBuffer() {
-		// A fucking PRIVATE Constructer
+	private Models() {
+		kinematicsSolver = new KinematicsSolver();
 	}
 
 	public Chain getArm() {
@@ -63,13 +62,18 @@ public class DataBuffer {
 	public void moveToPosition(FloatVector3 newPosition, KinematicsSolver.IKMethod ikAlgorithm) {
 		kinematicsSolver.setMethod(ikAlgorithm);
 		kinematicsSolver.setTarget(newPosition);
+
 		for (int i = 0; i < 4; i++) {
 			kinematicsSolver.getConstraint(i).toEndEffectorDistanceConstraint(newPosition);
 		}
 		for (int i = 4; i < 5; i++) {
 			kinematicsSolver.getConstraint(i).toEndEffectorDirectionConstraint(FloatVector3.Z_AXIS.negated());
 		}
-		kinematicsSolver.solveIK();
+
+		float[] newAngles = kinematicsSolver.solveIK();
+
+		robot.prepareTargetsDegs(newAngles);
+		robot.actuate();
 	}
 
 }

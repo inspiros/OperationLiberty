@@ -1,24 +1,32 @@
-package com.hust.robot;
+package com.hust.model.robot;
+
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import com.hust.core.Configuration;
-import com.hust.robot.trajectory.CubicTrajectoryPlanner;
-import com.hust.robot.trajectory.ExponentialTrajectoryPlanner;
-import com.hust.robot.trajectory.JointTrajectoryPlanner;
-import com.hust.robot.trajectory.LSPBTrajectoryPlanner;
-import com.hust.robot.trajectory.LinearTrajectoryPlanner;
-import com.hust.robot.trajectory.NoneTrajectoryPlanner;
-import com.hust.robot.trajectory.LSQBTrajectoryPlanner;
-import com.hust.robot.trajectory.QuinticTrajectoryPlanner;
-import com.hust.utils.DataChanger;
-import com.hust.utils.Operator;
+import com.hust.model.robot.trajectory.CubicTrajectoryPlanner;
+import com.hust.model.robot.trajectory.ExponentialTrajectoryPlanner;
+import com.hust.model.robot.trajectory.JointTrajectoryPlanner;
+import com.hust.model.robot.trajectory.LSPBTrajectoryPlanner;
+import com.hust.model.robot.trajectory.LSQBTrajectoryPlanner;
+import com.hust.model.robot.trajectory.LinearTrajectoryPlanner;
+import com.hust.model.robot.trajectory.NoneTrajectoryPlanner;
+import com.hust.model.robot.trajectory.QuinticTrajectoryPlanner;
 import com.hust.utils.Utils;
 import com.hust.utils.data.FloatVector3;
 
+import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleFloatProperty;
 
-public class Joint extends DataChanger<Float> {
+public class Joint implements Lockable {
 	public enum TrajectoryMethod {
+		/**
+		 * Without any trajectory model.
+		 */
 		NONE,
 		/**
 		 * Linear interpolation.
@@ -60,7 +68,6 @@ public class Joint extends DataChanger<Float> {
 	 * Rotation angle in degrees.
 	 */
 	public FloatProperty angle;
-	//public float angle;
 
 	/**
 	 * Lockable implementation.
@@ -83,13 +90,18 @@ public class Joint extends DataChanger<Float> {
 	/**
 	 * Angle updater runnable to implement rotation speed limit.
 	 */
-	private AngleUpdater updater = new AngleUpdater();
+	public AngleUpdater angleUpdater = new AngleUpdater();
+
+	/**
+	 * Lockable
+	 */
+	public boolean locked;
 
 	public Joint(Bone bone) {
 		this.bone = bone;
 		this.rotationAxis = FloatVector3.Z_AXIS;
 		this.angle = new SimpleFloatProperty();
-		addDataChangeListener(bone.chain);
+		setupAngleChangeListener();
 	}
 
 	public Joint(Bone bone, FloatVector3 rotationAxis, float angleDegs, float lowerLimit, float upperLimit) {
@@ -99,7 +111,7 @@ public class Joint extends DataChanger<Float> {
 		this.upperLimit = upperLimit;
 		this.angle = new SimpleFloatProperty(Utils.clamp(angleDegs, lowerLimit, upperLimit));
 		this.target = this.angle.get();
-		addDataChangeListener(bone.chain);
+		setupAngleChangeListener();
 	}
 
 	public Joint(Bone bone, FloatVector3 rotationAxis, float angleDegs) {
@@ -107,36 +119,38 @@ public class Joint extends DataChanger<Float> {
 		this.rotationAxis = rotationAxis;
 		this.angle = new SimpleFloatProperty(Utils.clamp(angleDegs, lowerLimit, upperLimit));
 		this.target = this.angle.get();
-		addDataChangeListener(bone.chain);
+		setupAngleChangeListener();
 	}
 
 	public Joint(Bone bone, FloatVector3 rotationAxis) {
 		this.bone = bone;
 		this.rotationAxis = rotationAxis;
 		this.angle = new SimpleFloatProperty();
-		addDataChangeListener(bone.chain);
+		setupAngleChangeListener();
+	}
+
+	private void setupAngleChangeListener() {
+		angle.addListener((observable, oldValue, newValue) -> {
+			bone.chain.recalculateTransformation(bone.id);
+		});
 	}
 
 	public void setAngleRads(float angleRads) {
 		this.angle.set(Utils.clamp(angleRads * Utils.RADS_TO_DEGS, lowerLimit, upperLimit));
-		changeDataTo(bone.id, angle.get());
 	}
 
 	public void setAngleDegs(float angleDegs) {
 		this.angle.set(Utils.clamp(angleDegs, lowerLimit, upperLimit));
-		changeDataTo(bone.id, angle.get());
 	}
 
 	public void updateAngleRads(float changeRads) {
 		float temp = angle.get() + changeRads * Utils.RADS_TO_DEGS;
 		angle.set(Utils.clamp(temp, lowerLimit, upperLimit));
-		changeDataTo(bone.id, angle.get());
 	}
 
 	public void updateAngleDegs(float changeDegs) {
 		float temp = angle.get() + changeDegs;
 		angle.set(Utils.clamp(temp, lowerLimit, upperLimit));
-		changeDataTo(bone.id, angle.get());
 	}
 
 	public void setTargetRads(float angleRads) {
@@ -149,13 +163,21 @@ public class Joint extends DataChanger<Float> {
 		updateToTarget();
 	}
 
-	public void abortTargetFollowing() {
-		updater.abort();
+	public void prepareTargetRads(float angleRads) {
+		this.target = angleRads * Utils.RADS_TO_DEGS;
 	}
 
-	private void updateToTarget() {
-		updater.abort();
-		updater.start();
+	public void prepareTargetDegs(float angleDegs) {
+		this.target = angleDegs;
+	}
+
+	public void abortTargetFollowing() {
+		angleUpdater.abort();
+	}
+
+	public void updateToTarget() {
+		angleUpdater.abort();
+		angleUpdater.start();
 	}
 
 	/**
@@ -164,24 +186,52 @@ public class Joint extends DataChanger<Float> {
 	 * @author Inspiros
 	 *
 	 */
-	private class AngleUpdater extends Operator {
+	public class AngleUpdater implements Runnable {
 		/**
 		 * Joint space trajectory planner.
 		 */
 		public JointTrajectoryPlanner trajectoryPlanner;
 
-		@Override
-		protected boolean terminateCondition() {
-			return angle.get() == target;
+		public BooleanProperty operationFinishedFlag;
+
+		public ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+		public ScheduledFuture<?> scheduledFuture;
+
+		protected long operatedTime;
+
+		public AngleUpdater() {
+			this.operationFinishedFlag = new SimpleBooleanProperty(false);
+
 		}
 
-		@Override
+		public synchronized void start() {
+			// Small changes
+			if (Math.abs(target - angle.get()) < 1) {
+				setAngleDegs(target);
+				terminate();
+			} else {
+
+				setup();
+				operatedTime = 0;
+				scheduledFuture = scheduler.scheduleAtFixedRate(this, 0, Configuration.sleepTime,
+						TimeUnit.MILLISECONDS);
+			}
+		}
+
+		public synchronized void abort() {
+			if (scheduledFuture != null && !scheduledFuture.isDone()) {
+				scheduledFuture.cancel(true);
+				// terminate();
+			}
+		}
+
 		protected void setup() {
 			TrajectoryMethod trajectoryMethod = Configuration.trajectoryMethod;
 
 			switch (trajectoryMethod) {
 			case NONE:
-				trajectoryPlanner = new NoneTrajectoryPlanner(angle.get(), target, Configuration.noneTrajectoryVelocity);
+				trajectoryPlanner = new NoneTrajectoryPlanner(angle.get(), target,
+						Configuration.noneTrajectoryVelocity);
 				return;
 			case LINEAR:
 				trajectoryPlanner = new LinearTrajectoryPlanner(angle.get(), target, Configuration.operationTime);
@@ -193,10 +243,12 @@ public class Joint extends DataChanger<Float> {
 				trajectoryPlanner = new QuinticTrajectoryPlanner(angle.get(), target, Configuration.operationTime);
 				return;
 			case LSPB:
-				trajectoryPlanner = new LSPBTrajectoryPlanner(angle.get(), target, Configuration.lspbFactor, Configuration.operationTime);
+				trajectoryPlanner = new LSPBTrajectoryPlanner(angle.get(), target, Configuration.lspbFactor,
+						Configuration.operationTime);
 				return;
 			case LSQB:
-				trajectoryPlanner = new LSQBTrajectoryPlanner(angle.get(), target, Configuration.lsqbFactor, Configuration.operationTime);
+				trajectoryPlanner = new LSQBTrajectoryPlanner(angle.get(), target, Configuration.lsqbFactor,
+						Configuration.operationTime);
 				return;
 			case EXPONENTIAL:
 				trajectoryPlanner = new ExponentialTrajectoryPlanner(angle.get(), target, Configuration.operationTime);
@@ -204,17 +256,24 @@ public class Joint extends DataChanger<Float> {
 			}
 		}
 
-		@Override
-		protected void loop() {
-			setAngleDegs(trajectoryPlanner.angleAt(operatedTime));
+		protected void terminate() {
+			trajectoryPlanner = null;
+			operationFinishedFlag.set(true);
+			operationFinishedFlag.set(false);
 		}
 
 		@Override
-		protected void terminate() {
-			trajectoryPlanner = null;
+		public void run() {
+			operatedTime += Configuration.sleepTime;
+			setAngleDegs(trajectoryPlanner.angleAt(operatedTime));
+			if (operatedTime == Configuration.operationTime || angle.get() == target) {
+				scheduledFuture.cancel(false);
+				terminate();
+			}
 		}
 	}
 
+	// Lockable implementations.
 	@Override
 	public void lock() {
 		angleLock = angle.get();

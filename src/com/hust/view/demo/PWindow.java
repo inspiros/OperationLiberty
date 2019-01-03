@@ -1,63 +1,54 @@
-package com.hust.view;
+package com.hust.view.demo;
 
-//import java.util.ArrayList;
 import java.util.LinkedList;
 
-import com.hust.core.DataBuffer;
+import com.hust.core.Models;
 import com.hust.core.Main;
-import com.hust.utils.DataChangeListener;
+import com.hust.utils.Utils;
 import com.hust.utils.data.FloatVector3;
 
-//import controlP5.CallbackEvent;
-//import controlP5.CallbackListener;
-//import controlP5.ControlP5;
-//import controlP5.Slider;
 import g4p_controls.G4P;
 import g4p_controls.GCScheme;
 import processing.opengl.PJOGL;
 
-public class PWindow extends HApplet implements DataChangeListener<Float> {
-	
-	private DataBuffer data;
+public class PWindow extends HApplet {
+
+	private Models data;
 	public PWindow app = this;
 
 	public final String appPath = sketchPath();
-//	private ControlP5 guiController;
 
 	/**
 	 * Camera control.
 	 */
-	// private PeasyCam camera;
 	private FloatVector3 cameraPosition, centerPosition;
-
-//	private ArrayList<Slider> sliders = new ArrayList<Slider>();
 
 	private LinkedList<Target> targets = new LinkedList<Target>();
 
 	public PWindow() {
-		data = Main.dataBuffer;
+		data = Main.model;
 		componentsDrawer.addDrawable(this.data.getArm());
-		componentsDrawer.setupDrawables();
 		HApplet.runSketch(new String[] { this.getClass().getSimpleName() }, this);
 	}
 
 	@Override
 	public void settings() {
-		size(800, 600, P3D);
+		size(Integer.parseInt(Utils.PROPERTIES.getProperty("demo.width")),
+				Integer.parseInt(Utils.PROPERTIES.getProperty("demo.height")), P3D);
 		try {
 			PJOGL.setIcon("\\resources\\icon.png");
 		} catch (Exception e) {
 		}
-		smooth(4);
+		smooth(8);
 	}
 
 	@Override
 	public void setup() {
 		// window.setFullscreen(true);
-		surface.setTitle("Operation Liberty");
+		surface.setTitle(Utils.PROPERTIES.getProperty("demo.title"));
 		surface.setFrameRate(30);
 
-		cameraPosition = new FloatVector3(width / 3, height / 3, 100);
+		cameraPosition = new FloatVector3(width / 3, height / 3, data.getArm().getEndEffector().z);
 		centerPosition = new FloatVector3();
 
 		createGui();
@@ -156,7 +147,6 @@ public class PWindow extends HApplet implements DataChangeListener<Float> {
 //
 //					@Override
 //					public void controlEvent(CallbackEvent event) {
-//						// TODO Auto-generated method stub
 //						if (event.getAction() == 100) {
 //
 //						}
@@ -167,7 +157,6 @@ public class PWindow extends HApplet implements DataChangeListener<Float> {
 //
 //					@Override
 //					public void controlEvent(CallbackEvent event) {
-//						// TODO Auto-generated method stub
 //						if (event.getAction() == 100) {
 //							new CoordinatePicker(app);
 //						}
@@ -175,34 +164,8 @@ public class PWindow extends HApplet implements DataChangeListener<Float> {
 //				});
 	}
 
-	public void updateSliders(float[] values) {
-//		for (int i = 0; i < values.length; i++) {
-//			sliders.get(i).changeValue(values[i]);
-//		}
-	}
-
-	public void updateSlider(int id, float value) {
-//		sliders.get(id).changeValue(value);
-	}
-
 	public void updateTarget(FloatVector3 t) {
-		updateTarget(t.x, t.y, t.z);
-	}
-	
-	public void updateTarget(float... t) {
-		if (t.length != 3) {
-			throw new IllegalArgumentException("Must be point of 3D");
-		}
 		targets.clear();
-		targets.add(new Target(app, t[0], t[1], t[2]));
-	}
-
-	@Override
-	public void dataChanged(int id) {
-	}
-
-	@Override
-	public void dataChangedTo(int id, Float value) {
-//		sliders.get(id).changeValue(value);
+		targets.add(new Target(app, t.x, t.y, t.z));
 	}
 }

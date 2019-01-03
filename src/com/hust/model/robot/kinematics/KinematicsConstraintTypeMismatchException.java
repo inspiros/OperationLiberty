@@ -1,4 +1,4 @@
-package com.hust.robot;
+package com.hust.model.robot.kinematics;
 
 public class KinematicsConstraintTypeMismatchException extends Exception {
 

@@ -3,21 +3,23 @@ package com.hust.utils;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 import com.hust.core.Configuration;
 
 public abstract class Operator implements Runnable {
-	protected long sleepTime = Configuration.sleepTime;
 	
 	protected long operatedTime;
+	
+	protected Runnable loop;
 
-	public ExecutorService executorService = Executors.newCachedThreadPool();
+	public ExecutorService executorService = Executors.newSingleThreadExecutor();
+	public ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 	
 	public Future<?> future;
-
-	public void setSleepTime(long millis) {
-		this.sleepTime = millis;
-	}
+	public ScheduledFuture<?> scheduledFuture;
 
 //	public void setThread(Thread thread) {
 //		this.thread = thread;
@@ -30,6 +32,8 @@ public abstract class Operator implements Runnable {
 
 	public synchronized void start() {
 		operatedTime = 0;
+		setup();
+		scheduledFuture = scheduler.scheduleAtFixedRate(this, 0, Configuration.sleepTime, TimeUnit.MILLISECONDS);
 		future = executorService.submit(this);
 	}
 
@@ -44,22 +48,12 @@ public abstract class Operator implements Runnable {
 
 	protected abstract void setup();
 
-	protected abstract void loop();
-
 	protected abstract void terminate();
 
 	@Override
 	public void run() {
-		setup();
-		while (!terminateCondition()) {
-			try {
-				loop();
-				Thread.sleep(sleepTime);
-				operatedTime += sleepTime;
-			} catch (InterruptedException e) {
-				break;
-			}
-		}
+		loop.run();
+		operatedTime += Configuration.sleepTime;
 		terminate();
 		future = null;
 	}

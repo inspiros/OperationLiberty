@@ -76,6 +76,33 @@ public class FloatMatrix3 {
 	}
 
 	/**
+	 * Constructor which sets the matrix from a float array.
+	 *
+	 * @param m00 The first element.
+	 * @param m01 The second element.
+	 * @param m02 The third element.
+	 * @param m10 The first element.
+	 * @param m11 The second element.
+	 * @param m12 The third element.
+	 * @param m20 The first element.
+	 * @param m21 The second element.
+	 * @param m22 The third element.
+	 */
+	public FloatMatrix3(float[] m) {
+		this.m00 = m[0];
+		this.m01 = m[1];
+		this.m02 = m[2];
+
+		this.m10 = m[3];
+		this.m11 = m[4];
+		this.m12 = m[5];
+
+		this.m20 = m[6];
+		this.m21 = m[7];
+		this.m22 = m[8];
+	}
+
+	/**
 	 * Constructor which sets the matrix from the three provided axes.
 	 * 
 	 * @param xAxis The positive X-axis to set.
@@ -107,6 +134,7 @@ public class FloatMatrix3 {
 		m00 = m11 = m22 = 1.0f;
 		m10 = m20 = m01 = m21 = m02 = m12 = 0.0f;
 	}
+	
 
 	/**
 	 * Transpose and return this matrix
@@ -424,7 +452,7 @@ public class FloatMatrix3 {
 				this.m10 * source.x + this.m11 * source.y + this.m12 * source.z,
 				this.m20 * source.x + this.m21 * source.y + this.m22 * source.z);
 	}
-
+	
 	/**
 	 * Calculate and return the determinant of this matrix.
 	 *

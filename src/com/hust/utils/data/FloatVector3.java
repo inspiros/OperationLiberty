@@ -98,6 +98,18 @@ public class FloatVector3 {
 		z = source.z;
 	}
 
+	public float get(int i) {
+		switch (i) {
+		case 0:
+			return x;
+		case 1:
+			return y;
+		case 2:
+			return z;
+		}
+		return Float.NaN;
+	}
+
 	public boolean approximatelyEquals(FloatVector3 v, float tolerance) {
 		float xDiff = Math.abs(this.x - v.x);
 		float yDiff = Math.abs(this.y - v.y);
@@ -235,8 +247,8 @@ public class FloatVector3 {
 	public static float dotProduct(FloatVector3 v1, FloatVector3 v2) {
 		FloatVector3 v1Norm = v1.normalized();
 		FloatVector3 v2Norm = v2.normalized();
-
-		return v1Norm.x * v2Norm.x + v1Norm.y * v2Norm.y + v1Norm.z * v2Norm.z;
+		float res = v1Norm.x * v2Norm.x + v1Norm.y * v2Norm.y + v1Norm.z * v2Norm.z;
+		return res > 1.0f ? 1.0f : res;
 	}
 
 	/**
@@ -412,7 +424,6 @@ public class FloatVector3 {
 		}
 	}
 
-	// TODO: Fix up and document properly
 	// Further reading: Stark, M. M., "Efficient Construction of Perpendicular
 	// Vectors without Branching", Journal of Graphics Tools 14:1 (2009), 55-61.
 //	Vec3f genPerpendicularVectorStark(Vec3f u)
@@ -432,7 +443,6 @@ public class FloatVector3 {
 //	    return v;
 //	}
 
-	// TODO: Test if better than Quick version and document.
 	/**
 	 * Method to generate a vector perpendicular to another one using the Frisvad
 	 * method.
@@ -585,8 +595,8 @@ public class FloatVector3 {
 	public static float getSignedAngleBetweenDegs(FloatVector3 referenceVector, FloatVector3 otherVector,
 			FloatVector3 normalVector) {
 		float unsignedAngle = FloatVector3.getAngleBetweenDegs(referenceVector, otherVector);
-		float sign = Utils
-				.sign(FloatVector3.dotProduct(FloatVector3.crossProduct(referenceVector, otherVector), normalVector));
+		float sign = Math
+				.signum(FloatVector3.dotProduct(FloatVector3.crossProduct(referenceVector, otherVector), normalVector));
 		return unsignedAngle * sign;
 	}
 
@@ -914,6 +924,7 @@ public class FloatVector3 {
 	 */
 	public FloatVector3 projectOntoPlane(FloatVector3 planeNormal) {
 		if (!(planeNormal.length() > 0.0f)) {
+			planeNormal.print();
 			throw new IllegalArgumentException("Plane normal cannot be a zero vector.");
 		}
 

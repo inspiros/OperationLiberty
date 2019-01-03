@@ -1,4 +1,4 @@
-package com.hust.robot;
+package com.hust.model.robot;
 
 import com.hust.utils.data.FloatVector3;
 

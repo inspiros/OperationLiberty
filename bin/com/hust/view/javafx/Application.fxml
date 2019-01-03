@@ -53,7 +53,7 @@
                                                    <children>
                                                       <HBox layoutX="5.0" style="-fx-alignment: center-left;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                          <children>
-                                                            <Label contentDisplay="CENTER" ellipsisString="" text="Forward Kinematics" textAlignment="CENTER" textFill="WHITE">
+                                                            <Label contentDisplay="CENTER" ellipsisString="" text="Forward Kinematics" textAlignment="CENTER" textFill="WHITE" HBox.hgrow="ALWAYS">
                                                                <font>
                                                                   <Font name="Segoe UI" size="24.0" />
                                                                </font>
@@ -75,7 +75,7 @@
                                           </Separator>
                                           <VBox spacing="5.0">
                                              <children>
-                                                <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Starting Point">
+                                                <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Location">
                                                    <font>
                                                       <Font name="System Bold" size="12.0" />
                                                    </font></Text>
@@ -93,7 +93,7 @@
                                           </VBox>
                                           <VBox spacing="5.0">
                                              <children>
-                                                <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="End Point">
+                                                <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Effector">
                                                    <font>
                                                       <Font name="System Bold" size="12.0" />
                                                    </font></Text>
@@ -145,7 +145,7 @@
                                                    <children>
                                                       <HBox layoutX="5.0" prefHeight="35.0" prefWidth="298.0" style="-fx-alignment: center-left;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                          <children>
-                                                            <Label contentDisplay="CENTER" ellipsisString="" prefHeight="40.0" prefWidth="207.0" text="Inverse Kinematics" textAlignment="CENTER" textFill="WHITE">
+                                                            <Label contentDisplay="CENTER" ellipsisString="" prefHeight="40.0" prefWidth="207.0" text="Inverse Kinematics" textAlignment="CENTER" textFill="WHITE" HBox.hgrow="ALWAYS">
                                                                <font>
                                                                   <Font name="Segoe UI" size="24.0" />
                                                                </font>
@@ -167,7 +167,7 @@
                                                       <Font name="System Bold Italic" size="12.0" />
                                                    </font>
                                                 </Text>
-                                                <JFXToggleNode fx:id="ikJacobianTranspose" alignment="CENTER_LEFT" ellipsisString="" prefHeight="25.0" prefWidth="200.0" text="Jacobian Transpose" textFill="WHITE">
+                                                <JFXToggleNode fx:id="ikJacobianTranspose" alignment="CENTER_LEFT" ellipsisString="" prefHeight="25.0" prefWidth="200.0" selected="true" text="Jacobian Transpose" textFill="WHITE">
                                                    <graphic>
                                                       <OctIconView glyphName="TRIANGLE_RIGHT" size="14.0" />
                                                    </graphic>
@@ -175,12 +175,22 @@
                                                       <ToggleGroup fx:id="ikToggleGroup" />
                                                    </toggleGroup>
                                                 </JFXToggleNode>
-                                                <JFXToggleNode fx:id="ikFABRIK" alignment="CENTER_LEFT" disable="true" ellipsisString="" layoutX="10.0" layoutY="40.0" prefHeight="25.0" prefWidth="200.0" text="FABRIK" textFill="WHITE" toggleGroup="$ikToggleGroup">
+                                                <JFXToggleNode fx:id="ikJacobianPseudoInverse" alignment="CENTER_LEFT" ellipsisString="" prefHeight="25.0" prefWidth="200.0" text="Jacobian Pseudo-Inverse" textFill="WHITE" toggleGroup="$ikToggleGroup">
                                                    <graphic>
                                                       <OctIconView glyphName="TRIANGLE_RIGHT" size="14.0" />
                                                    </graphic>
                                                 </JFXToggleNode>
-                                                <JFXToggleNode fx:id="ikGradientDescent" alignment="CENTER_LEFT" ellipsisString="" prefHeight="25.0" prefWidth="200.0" selected="true" text="Gradient Descent" textFill="WHITE" toggleGroup="$ikToggleGroup">
+                                                <JFXToggleNode fx:id="ikTargetTriangle" alignment="CENTER_LEFT" ellipsisString="" layoutX="10.0" layoutY="69.0" prefHeight="25.0" prefWidth="200.0" selected="true" text="Target Triangle (CCD)" textFill="WHITE" toggleGroup="$ikToggleGroup">
+                                                   <graphic>
+                                                      <OctIconView glyphName="TRIANGLE_RIGHT" size="14.0" />
+                                                   </graphic>
+                                                </JFXToggleNode>
+                                                <JFXToggleNode fx:id="ikGradientDescent" alignment="CENTER_LEFT" ellipsisString="" prefHeight="25.0" prefWidth="200.0" text="Gradient Descent" textFill="WHITE" toggleGroup="$ikToggleGroup">
+                                                   <graphic>
+                                                      <OctIconView glyphName="TRIANGLE_RIGHT" size="14.0" />
+                                                   </graphic>
+                                                </JFXToggleNode>
+                                                <JFXToggleNode fx:id="ikFABRIK" alignment="CENTER_LEFT" disable="true" ellipsisString="" layoutX="10.0" layoutY="40.0" prefHeight="25.0" prefWidth="200.0" text="FABRIK" textFill="WHITE" toggleGroup="$ikToggleGroup">
                                                    <graphic>
                                                       <OctIconView glyphName="TRIANGLE_RIGHT" size="14.0" />
                                                    </graphic>
@@ -207,7 +217,7 @@
                                                 </HBox>
                                                 <AnchorPane>
                                                    <children>
-                                                      <JFXButton alignment="CENTER" buttonType="RAISED" ellipsisString="" focusTraversable="false" onAction="#onSetTarget" prefHeight="25.0" prefWidth="72.0" text="Start" textAlignment="CENTER" textFill="WHITE" AnchorPane.rightAnchor="5.0">
+                                                      <JFXButton fx:id="setTargetBtn" alignment="CENTER" buttonType="RAISED" ellipsisString="" focusTraversable="false" onAction="#onSetTarget" prefHeight="25.0" prefWidth="72.0" text="Start" textAlignment="CENTER" textFill="WHITE" AnchorPane.rightAnchor="5.0">
                                                          <font>
                                                             <Font size="16.0" />
                                                          </font>
@@ -234,7 +244,7 @@
                                                    <children>
                                                       <HBox layoutX="5.0" prefHeight="35.0" prefWidth="298.0" style="-fx-alignment: center-left;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                          <children>
-                                                            <Label contentDisplay="CENTER" ellipsisString="" prefHeight="40.0" prefWidth="207.0" text="Trajectory" textAlignment="CENTER" textFill="WHITE">
+                                                            <Label contentDisplay="CENTER" ellipsisString="" prefHeight="40.0" prefWidth="207.0" text="Trajectory" textAlignment="CENTER" textFill="WHITE" HBox.hgrow="ALWAYS">
                                                                <font>
                                                                   <Font name="Segoe UI" size="24.0" />
                                                                </font>

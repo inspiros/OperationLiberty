@@ -1,4 +1,4 @@
-package com.hust.robot.trajectory;
+package com.hust.model.robot.trajectory;
 
 public class LSPBTrajectoryPlanner extends JointTrajectoryPlanner {
 	private float velocity, acceleration;

@@ -1,4 +1,4 @@
-package com.hust.view;
+package com.hust.view.demo;
 
 import com.hust.utils.data.FloatVector3;
 

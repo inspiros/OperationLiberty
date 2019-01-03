@@ -1,8 +1,9 @@
-package com.hust.robot;
+package com.hust.model.robot.kinematics;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import com.hust.model.robot.Bone;
 import com.hust.utils.data.FloatVector3;
 
 public class KinematicsConstraint {
@@ -150,10 +151,6 @@ public class KinematicsConstraint {
 
 	public ConstraintType getConstraintType() {
 		return constraintType;
-	}
-
-	public void setConstraintType(ConstraintType constraintType) {
-		this.constraintType = constraintType;
 	}
 
 	public Bone getBone() {

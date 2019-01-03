@@ -1,4 +1,4 @@
-package com.hust.robot;
+package com.hust.model.robot;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.hust.robot.trajectory;
+package com.hust.model.robot.trajectory;
 
 public abstract class JointTrajectoryPlanner {
 	protected float prevAngle, target;

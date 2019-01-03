@@ -1,4 +1,4 @@
-package com.hust.core.device;
+package com.hust.actuator;
 
 import com.pi4j.io.gpio.GpioController;
 import com.pi4j.io.gpio.GpioFactory;

@@ -1,8 +1,6 @@
-package com.hust.view;
+package com.hust.view.demo;
 
 public interface Drawable <D>{
 
 	public abstract void render(D drawer);
-	
-	public abstract void setupDrawer(D drawer);
 }

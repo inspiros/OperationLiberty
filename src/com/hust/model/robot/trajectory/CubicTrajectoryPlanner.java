@@ -1,4 +1,4 @@
-package com.hust.robot.trajectory;
+package com.hust.model.robot.trajectory;
 
 public class CubicTrajectoryPlanner extends JointTrajectoryPlanner {
 	private float factor2, factor3;

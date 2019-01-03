@@ -1,4 +1,4 @@
-package com.hust.view;
+package com.hust.view.demo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,12 +10,6 @@ public abstract class Drawer<D> {
 
 	public void addDrawable(Drawable<D> drawable) {
 		drawables.add(drawable);
-	}
-	
-	public void setupDrawables() {
-		for (Drawable<D> drawable : drawables) {
-			drawable.setupDrawer(container);
-		}
 	}
 
 	public void renderDrawables() {
