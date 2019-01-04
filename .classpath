@@ -7,5 +7,10 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Processing Libraries"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Pi4J"/>
 	<classpathentry kind="lib" path="D:/Program Files/eclipse/jee-2018-09/eclipse/workplace/jars/algebra/jama-1.0.3.jar" sourcepath="D:/Program Files/eclipse/jee-2018-09/eclipse/workplace/jars/algebra/jama-1.0.3-sources.jar"/>
+	<classpathentry kind="lib" path="D:/Program Files/eclipse/jee-2018-09/eclipse/workplace/jars/communications/jssc.jar" sourcepath="D:/Program Files/eclipse/jee-2018-09/eclipse/workplace/jars/communications/jssc-2.8.0-src.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:file:/D:/Program%20Files/eclipse/jee-2018-09/eclipse/workplace/jars/communications/jssc-2.8.0-javadoc.jar!/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -1,10 +1,9 @@
 package com.hust.view.javafx;
 
+import com.hust.core.Configurations;
 import com.hust.core.Main;
-import com.hust.utils.Utils;
 
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -40,18 +39,18 @@ public class FxApplication extends Application {
 	}
 
 	@Override
-	public void start(Stage primaryStage) throws Exception {
-		stage = primaryStage;
+	public void start(Stage stage) throws Exception {
+		this.stage = stage;
 
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Application.fxml"));
 		Parent parent = loader.load();
 		controller = loader.getController();
 
 		scene = new Scene(parent);
-		primaryStage.setScene(scene);
-		primaryStage.setTitle("Operation Liberty");
+		stage.setScene(scene);
+		stage.setTitle("Operation Liberty");
 		try {
-			primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("/resources/icon.png")));
+			stage.getIcons().add(new Image(getClass().getResourceAsStream("/resources/icon.png")));
 		} catch (Exception e) {
 		}
 
@@ -61,22 +60,19 @@ public class FxApplication extends Application {
 
 		scene.getStylesheets().addAll(getClass().getResource("Application.css").toExternalForm());
 
-		primaryStage.setOnCloseRequest((e) -> {
+		stage.setOnCloseRequest((e) -> {
 			if (Main.demo != null) {
-				Platform.runLater(() -> {
-					Main.demo.exit();
-				});
+				Main.demo.exit();
 			} else {
-				Platform.exit();
 				System.exit(0);
 			}
 		});
 
-		if (Boolean.parseBoolean(Utils.PROPERTIES.getProperty("view.fullscreen"))) {
-			primaryStage.setFullScreen(true);
+		if (Boolean.parseBoolean(Configurations.PROPERTIES.getProperty("view.fullscreen"))) {
+			stage.setFullScreen(true);
 		}
 
-		primaryStage.show();
+		stage.show();
 	}
 
 	public synchronized static FxApplication getInstance() {

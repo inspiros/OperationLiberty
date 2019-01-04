@@ -82,11 +82,11 @@
                                                 <HBox prefHeight="16.0" prefWidth="234.0" spacing="2.0">
                                                    <children>
                                                       <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="X:" />
-                                                      <TextField fx:id="startingPointLbl0" editable="false" prefWidth="60.0" promptText="0" />
+                                                      <TextField fx:id="locationLbl0" editable="false" prefWidth="60.0" promptText="0" />
                                                       <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text=" Y:" />
-                                                      <TextField fx:id="startingPointLbl1" editable="false" prefWidth="60.0" promptText="0" />
+                                                      <TextField fx:id="locationLbl1" editable="false" prefWidth="60.0" promptText="0" />
                                                       <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text=" Z:" />
-                                                      <TextField fx:id="startingPointLbl2" editable="false" prefWidth="60.0" promptText="0" />
+                                                      <TextField fx:id="locationLbl2" editable="false" prefWidth="60.0" promptText="0" />
                                                    </children>
                                                 </HBox>
                                              </children>
@@ -100,29 +100,49 @@
                                                 <HBox prefHeight="0.0" prefWidth="234.0" spacing="2.0">
                                                    <children>
                                                       <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="X:" />
-                                                      <TextField fx:id="endPointLbl0" editable="false" prefWidth="60.0" promptText="0" />
+                                                      <TextField fx:id="effectorLbl0" editable="false" prefWidth="60.0" promptText="0" />
                                                       <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text=" Y:" />
-                                                      <TextField fx:id="endPointLbl1" editable="false" prefWidth="60.0" promptText="0" />
+                                                      <TextField fx:id="effectorLbl1" editable="false" prefWidth="60.0" promptText="0" />
                                                       <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text=" Z:" />
-                                                      <TextField fx:id="endPointLbl2" editable="false" prefWidth="60.0" promptText="0" />
+                                                      <TextField fx:id="effectorLbl2" editable="false" prefWidth="60.0" promptText="0" />
                                                    </children>
                                                 </HBox>
                                              </children>
                                           </VBox>
                                           <VBox spacing="5.0">
                                              <children>
-                                                <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Direction">
+                                                <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Rotation">
                                                    <font>
                                                       <Font name="System Bold" size="12.0" />
                                                    </font></Text>
                                                 <HBox prefHeight="0.0" prefWidth="234.0" spacing="2.0">
                                                    <children>
                                                       <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="X:" />
-                                                      <TextField editable="false" prefWidth="60.0" promptText="0" />
+                                                      <TextField fx:id="rotationLbl00" editable="false" prefWidth="60.0" promptText="0" />
                                                       <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text=" Y:" />
-                                                      <TextField editable="false" prefWidth="60.0" promptText="0" />
+                                                      <TextField fx:id="rotationLbl01" editable="false" prefWidth="60.0" promptText="0" />
                                                       <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text=" Z:" />
-                                                      <TextField editable="false" prefWidth="60.0" promptText="0" />
+                                                      <TextField fx:id="rotationLbl02" editable="false" prefWidth="60.0" promptText="0" />
+                                                   </children>
+                                                </HBox>
+                                                <HBox prefHeight="0.0" prefWidth="234.0" spacing="2.0">
+                                                   <children>
+                                                      <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="X:" />
+                                                      <TextField fx:id="rotationLbl10" editable="false" prefWidth="60.0" promptText="0" />
+                                                      <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text=" Y:" />
+                                                      <TextField fx:id="rotationLbl11" editable="false" prefWidth="60.0" promptText="0" />
+                                                      <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text=" Z:" />
+                                                      <TextField fx:id="rotationLbl12" editable="false" prefWidth="60.0" promptText="0" />
+                                                   </children>
+                                                </HBox>
+                                                <HBox prefHeight="0.0" prefWidth="234.0" spacing="2.0">
+                                                   <children>
+                                                      <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="X:" />
+                                                      <TextField fx:id="rotationLbl20" editable="false" prefWidth="60.0" promptText="0" />
+                                                      <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text=" Y:" />
+                                                      <TextField fx:id="rotationLbl21" editable="false" prefWidth="60.0" promptText="0" />
+                                                      <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text=" Z:" />
+                                                      <TextField fx:id="rotationLbl22" editable="false" prefWidth="60.0" promptText="0" />
                                                    </children>
                                                 </HBox>
                                              </children>

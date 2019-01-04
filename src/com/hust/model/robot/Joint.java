@@ -5,7 +5,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
-import com.hust.core.Configuration;
+import com.hust.core.Configurations;
 import com.hust.model.robot.trajectory.CubicTrajectoryPlanner;
 import com.hust.model.robot.trajectory.ExponentialTrajectoryPlanner;
 import com.hust.model.robot.trajectory.JointTrajectoryPlanner;
@@ -14,6 +14,7 @@ import com.hust.model.robot.trajectory.LSQBTrajectoryPlanner;
 import com.hust.model.robot.trajectory.LinearTrajectoryPlanner;
 import com.hust.model.robot.trajectory.NoneTrajectoryPlanner;
 import com.hust.model.robot.trajectory.QuinticTrajectoryPlanner;
+import com.hust.utils.Lockable;
 import com.hust.utils.Utils;
 import com.hust.utils.data.FloatVector3;
 
@@ -213,7 +214,7 @@ public class Joint implements Lockable {
 
 				setup();
 				operatedTime = 0;
-				scheduledFuture = scheduler.scheduleAtFixedRate(this, 0, Configuration.sleepTime,
+				scheduledFuture = scheduler.scheduleAtFixedRate(this, 0, Configurations.sleepTime,
 						TimeUnit.MILLISECONDS);
 			}
 		}
@@ -226,32 +227,32 @@ public class Joint implements Lockable {
 		}
 
 		protected void setup() {
-			TrajectoryMethod trajectoryMethod = Configuration.trajectoryMethod;
+			TrajectoryMethod trajectoryMethod = Configurations.trajectoryMethod;
 
 			switch (trajectoryMethod) {
 			case NONE:
 				trajectoryPlanner = new NoneTrajectoryPlanner(angle.get(), target,
-						Configuration.noneTrajectoryVelocity);
+						Configurations.noneTrajectoryVelocity);
 				return;
 			case LINEAR:
-				trajectoryPlanner = new LinearTrajectoryPlanner(angle.get(), target, Configuration.operationTime);
+				trajectoryPlanner = new LinearTrajectoryPlanner(angle.get(), target, Configurations.operationTime);
 				return;
 			case CUBIC_POLYNOMIAL:
-				trajectoryPlanner = new CubicTrajectoryPlanner(angle.get(), target, Configuration.operationTime);
+				trajectoryPlanner = new CubicTrajectoryPlanner(angle.get(), target, Configurations.operationTime);
 				return;
 			case QUINTIC_POLYNOMIAL:
-				trajectoryPlanner = new QuinticTrajectoryPlanner(angle.get(), target, Configuration.operationTime);
+				trajectoryPlanner = new QuinticTrajectoryPlanner(angle.get(), target, Configurations.operationTime);
 				return;
 			case LSPB:
-				trajectoryPlanner = new LSPBTrajectoryPlanner(angle.get(), target, Configuration.lspbFactor,
-						Configuration.operationTime);
+				trajectoryPlanner = new LSPBTrajectoryPlanner(angle.get(), target, Configurations.lspbFactor,
+						Configurations.operationTime);
 				return;
 			case LSQB:
-				trajectoryPlanner = new LSQBTrajectoryPlanner(angle.get(), target, Configuration.lsqbFactor,
-						Configuration.operationTime);
+				trajectoryPlanner = new LSQBTrajectoryPlanner(angle.get(), target, Configurations.lsqbFactor,
+						Configurations.operationTime);
 				return;
 			case EXPONENTIAL:
-				trajectoryPlanner = new ExponentialTrajectoryPlanner(angle.get(), target, Configuration.operationTime);
+				trajectoryPlanner = new ExponentialTrajectoryPlanner(angle.get(), target, Configurations.operationTime);
 				return;
 			}
 		}
@@ -264,9 +265,9 @@ public class Joint implements Lockable {
 
 		@Override
 		public void run() {
-			operatedTime += Configuration.sleepTime;
+			operatedTime += Configurations.sleepTime;
 			setAngleDegs(trajectoryPlanner.angleAt(operatedTime));
-			if (operatedTime == Configuration.operationTime || angle.get() == target) {
+			if (operatedTime == Configurations.operationTime || angle.get() == target) {
 				scheduledFuture.cancel(false);
 				terminate();
 			}

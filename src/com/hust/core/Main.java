@@ -1,18 +1,18 @@
 package com.hust.core;
 
 import java.io.IOException;
-import java.util.Locale;
-import java.util.Scanner;
 
 import com.hust.actuator.Actuators;
-import com.hust.utils.Utils;
+import com.hust.model.Models;
+import com.hust.view.Views;
 import com.hust.view.demo.PWindow;
-import com.hust.view.javafx.FxApplication;
 //import com.pi4j.wiringpi.Gpio;
+
+import jssc.SerialPortException;
 
 public class Main {
 
-	public static FxApplication view;
+	public static Views view;
 
 	public static PWindow demo;
 
@@ -21,16 +21,15 @@ public class Main {
 	public static Actuators actuator;
 
 	public void start() throws IOException, InterruptedException {
-		Utils.PROPERTIES.load(getClass().getResourceAsStream("/resources/config.properties"));
-		checkPlatform();
+		Configurations.setupProperties();
 
 		ControllerExceptionHandler controllerExceptionHandler = new ControllerExceptionHandler();
 
 		Thread.setDefaultUncaughtExceptionHandler(controllerExceptionHandler);
 
-		model = Models.setupModel();
+		model = new Models().setupModel();
 		actuator = new Actuators(model).setupActuators();
-		initiateView();
+		view = new Views(model).setupViews();
 
 		// Gpio.wiringPiSetup();
 
@@ -66,40 +65,9 @@ public class Main {
 //				Thread.sleep(5000);
 //			}
 //		} catch (InterruptedException e) {
-//			// TODO Auto-generated catch block
 //			e.printStackTrace();
 //		}
 		Thread.currentThread().join();
-	}
-
-	private void checkPlatform() {
-		String osProperty;
-		String detectedOs = System.getProperty("os.name", "generic").toLowerCase(Locale.ENGLISH);
-		if ((detectedOs.indexOf("mac") >= 0) || (detectedOs.indexOf("darwin") >= 0)) {
-			osProperty = "MAC";
-		} else if (detectedOs.indexOf("win") >= 0) {
-			osProperty = "WINDOWS";
-		} else if (detectedOs.indexOf("nux") >= 0) {
-			osProperty = "LINUX";
-		} else {
-			osProperty = "OTHER";
-		}
-		Utils.PROPERTIES.put("platform", osProperty);
-	}
-
-	private void initiateView() {
-		// Might run on headless devices.
-		try {
-			if (Boolean.parseBoolean(Utils.PROPERTIES.getProperty("demo"))
-					&& Utils.PROPERTIES.getProperty("platform") != "LINUX") {
-				demo = new PWindow();
-			}
-			if (Boolean.parseBoolean(Utils.PROPERTIES.getProperty("view"))) {
-				view = FxApplication.getInstance();
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
 	}
 
 	/**
@@ -108,6 +76,7 @@ public class Main {
 	 * @param args
 	 * @throws IOException
 	 * @throws InterruptedException
+	 * @throws SerialPortException
 	 */
 	public static void main(String[] args) throws IOException, InterruptedException {
 		new Main().start();

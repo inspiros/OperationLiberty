@@ -2,9 +2,9 @@ package com.hust.view.demo;
 
 import java.util.LinkedList;
 
-import com.hust.core.Models;
+import com.hust.core.Configurations;
 import com.hust.core.Main;
-import com.hust.utils.Utils;
+import com.hust.model.Models;
 import com.hust.utils.data.FloatVector3;
 
 import g4p_controls.G4P;
@@ -27,14 +27,14 @@ public class PWindow extends HApplet {
 
 	public PWindow() {
 		data = Main.model;
-		componentsDrawer.addDrawable(this.data.getArm());
+		componentsDrawer.addDrawable(this.data.robot);
 		HApplet.runSketch(new String[] { this.getClass().getSimpleName() }, this);
 	}
 
 	@Override
 	public void settings() {
-		size(Integer.parseInt(Utils.PROPERTIES.getProperty("demo.width")),
-				Integer.parseInt(Utils.PROPERTIES.getProperty("demo.height")), P3D);
+		size(Integer.parseInt(Configurations.PROPERTIES.getProperty("demo.width")),
+				Integer.parseInt(Configurations.PROPERTIES.getProperty("demo.height")), P3D);
 		try {
 			PJOGL.setIcon("\\resources\\icon.png");
 		} catch (Exception e) {
@@ -45,10 +45,10 @@ public class PWindow extends HApplet {
 	@Override
 	public void setup() {
 		// window.setFullscreen(true);
-		surface.setTitle(Utils.PROPERTIES.getProperty("demo.title"));
+		surface.setTitle(Configurations.PROPERTIES.getProperty("demo.title"));
 		surface.setFrameRate(30);
 
-		cameraPosition = new FloatVector3(width / 3, height / 3, data.getArm().getEndEffector().z);
+		cameraPosition = new FloatVector3(width / 3, height / 3, data.robot.getEndEffector().z);
 		centerPosition = new FloatVector3();
 
 		createGui();

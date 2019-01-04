@@ -2,6 +2,7 @@ package com.hust.model.robot;
 
 import java.util.ArrayList;
 
+import com.hust.utils.Lockable;
 import com.hust.utils.data.FloatMatrix4;
 import com.hust.utils.data.FloatQuaternion;
 import com.hust.utils.data.FloatVector3;

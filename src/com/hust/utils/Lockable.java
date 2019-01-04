@@ -1,4 +1,4 @@
-package com.hust.model.robot;
+package com.hust.utils;
 
 public interface Lockable {
 

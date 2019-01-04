@@ -1,4 +1,4 @@
-package com.hust.core;
+package com.hust.model;
 
 import com.hust.model.robot.Chain;
 import com.hust.model.robot.kinematics.KinematicsSolver;
@@ -12,27 +12,26 @@ import com.hust.utils.data.FloatVector3;
  */
 public class Models {
 
-	private Chain robot;
+	public Chain robot;
 
-	private KinematicsSolver kinematicsSolver;
+	public KinematicsSolver kinematicsSolver;
 
-	public static Models setupModel() {
-		Models res = new Models();
-
-		res.robot = new Chain();
-		res.robot.addConsecutiveBone(new FloatVector3(0, 0, 50), FloatVector3.Z_AXIS, 0, -180, 180);
-		res.robot.addConsecutiveBone(new FloatVector3(0, 0, 40), FloatVector3.Y_AXIS, 45, -120, 120);
-		res.robot.addConsecutiveBone(new FloatVector3(0, 0, 40), FloatVector3.X_AXIS, 0, -120, 120);
-		res.robot.addConsecutiveBone(new FloatVector3(0, 0, 30), FloatVector3.Y_AXIS, 45, -120, 120);
-		res.robot.addConsecutiveBone(new FloatVector3(0, 0, 20), FloatVector3.Y_AXIS, 0, -120, 120);
-
-		res.kinematicsSolver.setChain(res.robot);
-
-		return res;
+	public Models() {
+		kinematicsSolver = new KinematicsSolver();
 	}
 
-	private Models() {
-		kinematicsSolver = new KinematicsSolver();
+	public Models setupModel() {
+
+		robot = new Chain();
+		robot.addConsecutiveBone(new FloatVector3(0, 0, 50), FloatVector3.Z_AXIS, 0, -120, 120);
+		robot.addConsecutiveBone(new FloatVector3(0, 0, 40), FloatVector3.Y_AXIS, 45, -120, 120);
+		robot.addConsecutiveBone(new FloatVector3(0, 0, 40), FloatVector3.X_AXIS, 0, -120, 120);
+		robot.addConsecutiveBone(new FloatVector3(0, 0, 30), FloatVector3.Y_AXIS, 45, -120, 120);
+		robot.addConsecutiveBone(new FloatVector3(0, 0, 20), FloatVector3.Y_AXIS, 0, -120, 120);
+
+		kinematicsSolver.setChain(robot);
+
+		return this;
 	}
 
 	public Chain getArm() {

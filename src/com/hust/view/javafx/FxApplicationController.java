@@ -4,13 +4,15 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
-import com.hust.core.Configuration;
-import com.hust.core.Models;
+import com.hust.core.Configurations;
+import com.hust.model.Models;
 import com.hust.model.robot.Bone;
 import com.hust.model.robot.Joint;
 import com.hust.model.robot.kinematics.KinematicsSolver;
 import com.hust.core.Main;
 import com.hust.utils.Utils;
+import com.hust.utils.data.FloatMatrix3;
+import com.hust.utils.data.FloatQuaternion;
 import com.hust.utils.data.FloatVector3;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
@@ -64,8 +66,19 @@ public class FxApplicationController implements Initializable {
 	 * 
 	 */
 	@FXML
-	private TextField startingPointLbl0, startingPointLbl1, startingPointLbl2, endPointLbl0, endPointLbl1, endPointLbl2,
-			targetLbl0, targetLbl1, targetLbl2;
+	private TextField locationLbl0, locationLbl1, locationLbl2, effectorLbl0, effectorLbl1, effectorLbl2, rotationLbl00,
+			rotationLbl01, rotationLbl02, rotationLbl10, rotationLbl11, rotationLbl12, rotationLbl20, rotationLbl21,
+			rotationLbl22, targetLbl0, targetLbl1, targetLbl2;
+
+	/**
+	 * Location and effector listeners.
+	 */
+	private FxSceneSyncService<FloatVector3> locationSync, effectorSync;
+
+	/**
+	 * Rotation listener.
+	 */
+	private FxSceneSyncService<FloatQuaternion> rotationSync;
 
 	@FXML
 	private ToggleGroup ikToggleGroup, jstToggleGroup;
@@ -99,11 +112,6 @@ public class FxApplicationController implements Initializable {
 		this.scene = scene;
 	}
 
-	/**
-	 * Starting and end position listeners
-	 */
-	private FxSceneSyncService<FloatVector3> positionSyncService0, positionSyncService1;
-
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		data = Main.model;
@@ -118,9 +126,12 @@ public class FxApplicationController implements Initializable {
 	 */
 	private void initiateListeners() {
 		for (int i = 0; i < data.getDof(); i++) {
-			Bone bone = data.getArm().getBone(i);
+			Bone bone = data.robot.bones.get(i);
 			bone.globalTranslation.addListener((observable, oldValue, newValue) -> {
 				reactToPropertyChanges(bone.id, newValue);
+			});
+			bone.globalRotation.addListener((observable, oldValue, newValue) -> {
+				reactToRotationChanges(bone.id, newValue);
 			});
 		}
 
@@ -135,7 +146,7 @@ public class FxApplicationController implements Initializable {
 			if (newValue == null) {
 				oldValue.setSelected(true);
 			} else {
-				Configuration.setTrajectoryMethod(Joint.TrajectoryMethod.values()[(int) newValue.getUserData()]);
+				Configurations.setTrajectoryMethod(Joint.TrajectoryMethod.values()[(int) newValue.getUserData()]);
 			}
 		});
 
@@ -165,23 +176,42 @@ public class FxApplicationController implements Initializable {
 		targetLbl2.setOnKeyPressed(targetLbl0.getOnKeyPressed());
 
 		// Sum bad boiz
-		positionSyncService0 = new FxSceneSyncService<FloatVector3>() {
+		locationSync = new FxSceneSyncService<FloatVector3>() {
 
 			@Override
 			public void doTask() {
-				startingPointLbl0.textProperty().setValue(Utils.DECIMAL_FORMAT.format(currentVal.x));
-				startingPointLbl1.textProperty().setValue(Utils.DECIMAL_FORMAT.format(currentVal.y));
-				startingPointLbl2.textProperty().setValue(Utils.DECIMAL_FORMAT.format(currentVal.z));
+				locationLbl0.setText(Utils.DECIMAL_FORMAT.format(currentVal.x));
+				locationLbl1.setText(Utils.DECIMAL_FORMAT.format(currentVal.y));
+				locationLbl2.setText(Utils.DECIMAL_FORMAT.format(currentVal.z));
 			}
 		};
 
-		positionSyncService1 = new FxSceneSyncService<FloatVector3>() {
+		effectorSync = new FxSceneSyncService<FloatVector3>() {
 
 			@Override
 			public void doTask() {
-				endPointLbl0.textProperty().setValue(Utils.DECIMAL_FORMAT.format(currentVal.x));
-				endPointLbl1.textProperty().setValue(Utils.DECIMAL_FORMAT.format(currentVal.y));
-				endPointLbl2.textProperty().setValue(Utils.DECIMAL_FORMAT.format(currentVal.z));
+				effectorLbl0.setText(Utils.DECIMAL_FORMAT.format(currentVal.x));
+				effectorLbl1.setText(Utils.DECIMAL_FORMAT.format(currentVal.y));
+				effectorLbl2.setText(Utils.DECIMAL_FORMAT.format(currentVal.z));
+			}
+		};
+
+		rotationSync = new FxSceneSyncService<FloatQuaternion>() {
+
+			@Override
+			public void doTask() {
+				FloatMatrix3 mat = currentVal.toFloatMatrix3();
+				rotationLbl00.setText(Utils.DECIMAL_FORMAT.format(mat.m00));
+				rotationLbl01.setText(Utils.DECIMAL_FORMAT.format(mat.m01));
+				rotationLbl02.setText(Utils.DECIMAL_FORMAT.format(mat.m02));
+
+				rotationLbl10.setText(Utils.DECIMAL_FORMAT.format(mat.m10));
+				rotationLbl11.setText(Utils.DECIMAL_FORMAT.format(mat.m11));
+				rotationLbl12.setText(Utils.DECIMAL_FORMAT.format(mat.m12));
+
+				rotationLbl20.setText(Utils.DECIMAL_FORMAT.format(mat.m20));
+				rotationLbl21.setText(Utils.DECIMAL_FORMAT.format(mat.m21));
+				rotationLbl22.setText(Utils.DECIMAL_FORMAT.format(mat.m22));
 			}
 		};
 
@@ -217,38 +247,64 @@ public class FxApplicationController implements Initializable {
 	}
 
 	/**
-	 * Read data forcefully.
+	 * Read location data forcefully.
 	 * 
 	 * @param id       The id of the listened bone.
 	 * @param newValue The new value of {@code FloatVector3} of the listened bone.
 	 */
 	private void preactToPropertyChanges(int id, FloatVector3 newValue) {
 		if (id == listenedId) {
-			positionSyncService1.runLater(newValue);
+			effectorSync.runLater(newValue);
 			if (id == 0) {
-				positionSyncService0.runLater(data.getArm().globalTranslation);
+				locationSync.runLater(data.robot.globalTranslation);
 			}
 		} else if (id == listenedId - 1) {
-			positionSyncService0.runLater(newValue);
+			locationSync.runLater(newValue);
 		}
 	}
 
 	/**
-	 * Read data whenever detected changes, the update rate is enforced to be under
-	 * a certain amount of times in 1 second so that the fast changing pace of the
-	 * background data won't make the UI application 'not responding'.
+	 * Read location data whenever detected changes, the update rate is enforced to
+	 * be under a certain amount of times in 1 second so that the fast changing pace
+	 * of the background data won't make the UI application 'not responding'.
 	 * 
 	 * @param id       The id of the listened bone.
 	 * @param newValue The new value of {@code FloatVector3} of the listened bone.
 	 */
 	private void reactToPropertyChanges(int id, FloatVector3 newValue) {
 		if (id == listenedId) {
-			positionSyncService1.tryRunLater(newValue);
+			effectorSync.tryRunLater(newValue);
 			if (id == 0) {
-				positionSyncService0.tryRunLater(data.getArm().globalTranslation);
+				locationSync.tryRunLater(data.robot.globalTranslation);
 			}
 		} else if (id == listenedId - 1) {
-			positionSyncService0.tryRunLater(newValue);
+			locationSync.tryRunLater(newValue);
+		}
+	}
+
+	/**
+	 * Read rotation data forcefully.
+	 * 
+	 * @param id       The id of the listened bone.
+	 * @param newValue The new value of {@code FloatVector3} of the listened bone.
+	 */
+	private void preactToRotationChanges(int id, FloatQuaternion newValue) {
+		if (id == listenedId) {
+			rotationSync.runLater(newValue);
+		}
+	}
+
+	/**
+	 * Read rotation data whenever detected changes, the update rate is enforced to
+	 * be under a certain amount of times in 1 second so that the fast changing pace
+	 * of the background data won't make the UI application 'not responding'.
+	 * 
+	 * @param id
+	 * @param newValue
+	 */
+	private void reactToRotationChanges(int id, FloatQuaternion newValue) {
+		if (id == listenedId) {
+			rotationSync.tryRunLater(newValue);
 		}
 	}
 
@@ -259,7 +315,7 @@ public class FxApplicationController implements Initializable {
 	private void initializePositioner() {
 
 		for (int i = 0; i < data.getDof(); i++) {
-			Bone bone = data.getArm().getBone(i);
+			Bone bone = data.robot.bones.get(i);
 
 			Label label = new Label("Khớp " + (i + 1));
 			label.setAlignment(Pos.CENTER);
@@ -380,17 +436,30 @@ public class FxApplicationController implements Initializable {
 			// Minus 1 as we added a None choice
 			listenedId = jfxComboBoxChoices.indexOf(newValue) - 1;
 			if (listenedId < 0) {
-				startingPointLbl0.clear();
-				startingPointLbl1.clear();
-				startingPointLbl2.clear();
-				endPointLbl0.clear();
-				endPointLbl1.clear();
-				endPointLbl2.clear();
+				locationLbl0.clear();
+				locationLbl1.clear();
+				locationLbl2.clear();
+
+				effectorLbl0.clear();
+				effectorLbl1.clear();
+				effectorLbl2.clear();
+
+				rotationLbl00.clear();
+				rotationLbl01.clear();
+				rotationLbl02.clear();
+				rotationLbl10.clear();
+				rotationLbl11.clear();
+				rotationLbl12.clear();
+				rotationLbl20.clear();
+				rotationLbl21.clear();
+				rotationLbl22.clear();
 			} else {
-				preactToPropertyChanges(listenedId, data.getArm().getBone(listenedId).globalTranslation.get());
+				Bone bone = data.robot.bones.get(listenedId);
+				preactToPropertyChanges(listenedId, bone.globalTranslation.get());
+				preactToRotationChanges(listenedId, bone.globalRotation.get());
 				if (listenedId > 0) {
 					preactToPropertyChanges(listenedId - 1,
-							data.getArm().getBone(listenedId - 1).globalTranslation.get());
+							data.robot.bones.get(listenedId - 1).globalTranslation.get());
 				}
 			}
 		});

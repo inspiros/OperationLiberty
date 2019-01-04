@@ -4,7 +4,6 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.text.DecimalFormat;
-import java.util.Properties;
 import java.util.Random;
 
 import com.hust.utils.data.FloatVector3;
@@ -14,12 +13,11 @@ import com.hust.utils.data.FloatVector3;
  * operations. Version: 0.4 Date : 04/12/2015
  */
 public final class Utils {
-	public static final Properties PROPERTIES = new Properties();
-
+	
 	// Constants to translate values from degrees to radians and vice versa
 	public static final float DEGS_TO_RADS = (float) Math.PI / 180.0f;
 	public static final float RADS_TO_DEGS = 180.0f / (float) Math.PI;
-	
+
 	public static final float MILLIS_TO_SECS = 1 / 1000.0f;
 	public static final float SECS_TO_MILLIS = 1000.0f;
 
@@ -110,19 +108,6 @@ public final class Utils {
 	 */
 	public static FloatBuffer createFloatBuffer(int numFloats) {
 		return ByteBuffer.allocateDirect(numFloats * Float.BYTES).order(ByteOrder.nativeOrder()).asFloatBuffer();
-	}
-
-	/**
-	 * Determine the sign of a float value.
-	 * 
-	 * @param value The value to return the sign of.
-	 * @return 1.0f if the provided float value is positive, -1.0f otherwise.
-	 */
-	public static float sign(float value) {
-		if (value >= 0.0f) {
-			return 1.0f;
-		}
-		return -1.0f;
 	}
 
 	/**
@@ -254,5 +239,9 @@ public final class Utils {
 	 */
 	public static float round(float value) {
 		return Float.parseFloat(DECIMAL_FORMAT.format(value));
+	}
+
+	public static int map(float val, float lowerBound, float upperBound, int lowerMap, int upperMap) {
+		return Math.round((val - lowerBound) * (upperMap - lowerMap) / (upperBound - lowerBound));
 	}
 }
