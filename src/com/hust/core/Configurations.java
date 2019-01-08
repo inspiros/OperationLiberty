@@ -77,4 +77,9 @@ public final class Configurations {
 	 * @see FxSceneSyncService
 	 */
 	public static long viewUpdateInterval = 60L;
+	
+	/**
+	 * Max displayed node in charts.
+	 */
+	public static int maxChartNodes = 30;
 }

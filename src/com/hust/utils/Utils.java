@@ -6,7 +6,7 @@ import java.nio.FloatBuffer;
 import java.text.DecimalFormat;
 import java.util.Random;
 
-import com.hust.utils.data.FloatVector3;
+import com.hust.utils.algebra.FloatVector3;
 
 /**
  * Class : A series of static utility / helper methods to perform common

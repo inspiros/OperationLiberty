@@ -4,7 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import com.hust.model.robot.Bone;
-import com.hust.utils.data.FloatVector3;
+import com.hust.utils.algebra.FloatVector3;
 
 public class KinematicsConstraint {
 

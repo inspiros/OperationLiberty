@@ -2,9 +2,9 @@ package com.hust.model.robot;
 
 import com.hust.utils.Lockable;
 import com.hust.utils.Utils;
-import com.hust.utils.data.FloatMatrix4;
-import com.hust.utils.data.FloatQuaternion;
-import com.hust.utils.data.FloatVector3;
+import com.hust.utils.algebra.FloatMatrix4;
+import com.hust.utils.algebra.FloatQuaternion;
+import com.hust.utils.algebra.FloatVector3;
 import com.hust.view.demo.Drawable;
 import com.hust.view.demo.HApplet;
 

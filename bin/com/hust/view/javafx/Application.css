@@ -69,8 +69,7 @@
     -fx-padding: -2.0;
 }
 
-.scroll-pane .scroll-bar:vertical .thumb
-{
+.scroll-pane .scroll-bar:vertical .thumb {
     -fx-background-color: derive(black,90.0%);
     -fx-background-insets: 2.0, 0.0, 0.0;
     -fx-background-radius: 2.0em;
@@ -78,38 +77,42 @@
 }
 
 /*TablPane styling*/
-.tab{
+.tab {
     -fx-background-color: transparent ;
 }
 
-.tab-header-background{
+.tab-header-background {
     -fx-background-color: transparent ;
 }
 
-.tab-label{
+.tab-label {
     -fx-text-fill: aqua ;
     -fx-font-size: 9.0pt;
 }
 
 
-.tab-main{
+.tab-main {
     -fx-pref-height : 60.0;
     -fx-max-height : 60.0;
 }
 
-.settings-tab{
+.settings-tab {
     -fx-background-color: transparent;
     -fx-padding: 5.0px 10.0px 5.0px 10.0px;
 }
 
-.settings-tab:selected{
+.settings-tab:selected {
     -fx-background-color: transparent;
 }
 
-.settings-tab:selected .tab-label{
+.settings-tab:selected .tab-label {
     -fx-text-fill: transparent ;
 }
 
-.settings-tab .tab-header-background{
+.settings-tab .tab-header-background {
     -fx-background-color: transparent ;
+}
+
+.axis {
+	-fx-tick-label-fill: white ;
 }

@@ -3,6 +3,7 @@ package com.hust.view.javafx;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import com.hust.core.Configurations;
 import com.hust.model.Models;
@@ -11,9 +12,9 @@ import com.hust.model.robot.Joint;
 import com.hust.model.robot.kinematics.KinematicsSolver;
 import com.hust.core.Main;
 import com.hust.utils.Utils;
-import com.hust.utils.data.FloatMatrix3;
-import com.hust.utils.data.FloatQuaternion;
-import com.hust.utils.data.FloatVector3;
+import com.hust.utils.algebra.FloatMatrix3;
+import com.hust.utils.algebra.FloatQuaternion;
+import com.hust.utils.algebra.FloatVector3;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXRippler;
@@ -21,12 +22,18 @@ import com.jfoenix.controls.JFXSlider;
 import com.jfoenix.controls.JFXToggleNode;
 import com.jfoenix.effects.JFXDepthManager;
 
+import javafx.application.Platform;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Label;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
@@ -41,7 +48,7 @@ import javafx.stage.Stage;
 
 public class FxApplicationController implements Initializable {
 
-	private Models data;
+	private Models model;
 
 	private Stage stage;
 
@@ -69,6 +76,9 @@ public class FxApplicationController implements Initializable {
 	private TextField locationLbl0, locationLbl1, locationLbl2, effectorLbl0, effectorLbl1, effectorLbl2, rotationLbl00,
 			rotationLbl01, rotationLbl02, rotationLbl10, rotationLbl11, rotationLbl12, rotationLbl20, rotationLbl21,
 			rotationLbl22, targetLbl0, targetLbl1, targetLbl2;
+
+	@FXML
+	private LineChart<Number, Number> temperatureChart;
 
 	/**
 	 * Location and effector listeners.
@@ -114,19 +124,20 @@ public class FxApplicationController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-		data = Main.model;
+		model = Main.model;
 
 		initializePositioner();
 		initializePanes();
-		initiateListeners();
+		initializeListeners();
+		initializeSensorsDisplayer();
 	}
 
 	/**
 	 * Initialize some data listeners and data bindings.
 	 */
-	private void initiateListeners() {
-		for (int i = 0; i < data.getDof(); i++) {
-			Bone bone = data.robot.bones.get(i);
+	private void initializeListeners() {
+		for (int i = 0; i < model.getDof(); i++) {
+			Bone bone = model.robot.bones.get(i);
 			bone.globalTranslation.addListener((observable, oldValue, newValue) -> {
 				reactToPropertyChanges(bone.id, newValue);
 			});
@@ -242,7 +253,7 @@ public class FxApplicationController implements Initializable {
 			Main.demo.updateTarget(newPosition);
 		}
 		// Ready to move.
-		data.moveToPosition(newPosition,
+		model.moveToPosition(newPosition,
 				KinematicsSolver.IKMethod.values()[(int) ikToggleGroup.getSelectedToggle().getUserData()]);
 	}
 
@@ -256,7 +267,7 @@ public class FxApplicationController implements Initializable {
 		if (id == listenedId) {
 			effectorSync.runLater(newValue);
 			if (id == 0) {
-				locationSync.runLater(data.robot.globalTranslation);
+				locationSync.runLater(model.robot.globalTranslation);
 			}
 		} else if (id == listenedId - 1) {
 			locationSync.runLater(newValue);
@@ -275,7 +286,7 @@ public class FxApplicationController implements Initializable {
 		if (id == listenedId) {
 			effectorSync.tryRunLater(newValue);
 			if (id == 0) {
-				locationSync.tryRunLater(data.robot.globalTranslation);
+				locationSync.tryRunLater(model.robot.globalTranslation);
 			}
 		} else if (id == listenedId - 1) {
 			locationSync.tryRunLater(newValue);
@@ -314,8 +325,8 @@ public class FxApplicationController implements Initializable {
 	 */
 	private void initializePositioner() {
 
-		for (int i = 0; i < data.getDof(); i++) {
-			Bone bone = data.robot.bones.get(i);
+		for (int i = 0; i < model.getDof(); i++) {
+			Bone bone = model.robot.bones.get(i);
 
 			Label label = new Label("Khớp " + (i + 1));
 			label.setAlignment(Pos.CENTER);
@@ -350,7 +361,7 @@ public class FxApplicationController implements Initializable {
 					return;
 				}
 				slider.setValue(newValue);
-				data.setTargetDegs(Integer.parseInt(slider.getId()), newValue);
+				model.setTargetDegs(Integer.parseInt(slider.getId()), newValue);
 			});
 
 			slider.valueChangingProperty().addListener((observableValue, wasChanging, changing) -> {
@@ -425,7 +436,7 @@ public class FxApplicationController implements Initializable {
 		// Forward Kinematics Pane
 		jfxComboBoxChoices = new ArrayList<>();
 		jfxComboBoxChoices.add("None");
-		for (int i = 0; i < data.getDof(); i++) {
+		for (int i = 0; i < model.getDof(); i++) {
 			jfxComboBoxChoices.add("Khớp " + (i + 1));
 		}
 		jfxComboBoxChoices.trimToSize();
@@ -454,17 +465,65 @@ public class FxApplicationController implements Initializable {
 				rotationLbl21.clear();
 				rotationLbl22.clear();
 			} else {
-				Bone bone = data.robot.bones.get(listenedId);
+				Bone bone = model.robot.bones.get(listenedId);
 				preactToPropertyChanges(listenedId, bone.globalTranslation.get());
 				preactToRotationChanges(listenedId, bone.globalRotation.get());
 				if (listenedId > 0) {
 					preactToPropertyChanges(listenedId - 1,
-							data.robot.bones.get(listenedId - 1).globalTranslation.get());
+							model.robot.bones.get(listenedId - 1).globalTranslation.get());
 				}
 			}
 		});
 
 		// TODO Angle listener.
 
+	}
+
+	private void initializeSensorsDisplayer() {
+		temperatureChart.setCreateSymbols(false);
+		temperatureChart.setAnimated(false);
+		temperatureChart.getXAxis().setAnimated(false);
+		temperatureChart.getYAxis().setAnimated(false);
+		((NumberAxis) temperatureChart.getXAxis()).setForceZeroInRange(false);
+		((NumberAxis) temperatureChart.getYAxis()).setForceZeroInRange(false);
+
+		/*
+		 * 
+		 */
+		model.vault.dataSeries.forEach((dataSeries) -> {
+			XYChart.Series<Number, Number> chartSeries = new XYChart.Series<>();
+			chartSeries.setName("lx-16a");
+			
+			temperatureChart.getData().add(chartSeries);
+
+			ObservableList<Number> series = dataSeries.series.get("temperature");
+
+			series.addListener(new ListChangeListener<Number>() {
+				/**
+				 * Auto increment.
+				 */
+				final AtomicInteger tick = new AtomicInteger();
+				/**
+				 * List.
+				 */
+				ObservableList<XYChart.Data<Number, Number>> list = chartSeries.getData();
+
+				@Override
+				public void onChanged(Change<? extends Number> c) {
+					c.next();
+					for (Number number : c.getAddedSubList()) {
+						Platform.runLater(() -> {
+							
+							if (list.size() == Configurations.maxChartNodes) {
+								list.remove(0);
+//								((NumberAxis) temperatureChart.getYAxis())
+//										.setLowerBound(list.remove(0).getXValue().doubleValue());
+							}
+							list.add(new XYChart.Data<Number, Number>(tick.incrementAndGet(), number));
+						});
+					}
+				}
+			});
+		});
 	}
 }

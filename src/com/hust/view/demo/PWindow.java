@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import com.hust.core.Configurations;
 import com.hust.core.Main;
 import com.hust.model.Models;
-import com.hust.utils.data.FloatVector3;
+import com.hust.utils.algebra.FloatVector3;
 
 import g4p_controls.G4P;
 import g4p_controls.GCScheme;

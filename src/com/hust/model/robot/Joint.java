@@ -16,7 +16,7 @@ import com.hust.model.robot.trajectory.NoneTrajectoryPlanner;
 import com.hust.model.robot.trajectory.QuinticTrajectoryPlanner;
 import com.hust.utils.Lockable;
 import com.hust.utils.Utils;
-import com.hust.utils.data.FloatVector3;
+import com.hust.utils.algebra.FloatVector3;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.FloatProperty;

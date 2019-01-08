@@ -1,6 +1,6 @@
 package com.hust.model.robot;
 
-import com.hust.utils.data.FloatVector3;
+import com.hust.utils.algebra.FloatVector3;
 
 public class Link {
 

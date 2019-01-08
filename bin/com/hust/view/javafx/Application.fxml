@@ -6,6 +6,8 @@
 <?import com.jfoenix.controls.JFXToggleNode?>
 <?import de.jensd.fx.glyphs.octicons.OctIconView?>
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
@@ -41,13 +43,69 @@
                <children>
                   <JFXTabPane prefHeight="478.0" prefWidth="316.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                      <tabs>
+                        <Tab text="SS">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                 <children>
+                                    <VBox layoutX="8.0" layoutY="8.0" prefHeight="87.0" spacing="16.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="8.0">
+                                       <children>
+                                          <StackPane fx:id="anchorPane31" VBox.vgrow="ALWAYS">
+                                             <children>
+                                                <AnchorPane fx:id="jstLabelPane1" style="-fx-background-color: #eda678;" StackPane.alignment="CENTER">
+                                                   <children>
+                                                      <HBox layoutX="5.0" style="-fx-alignment: center-left;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                         <children>
+                                                            <Label contentDisplay="CENTER" ellipsisString="" prefHeight="40.0" prefWidth="207.0" text="Sensors" textAlignment="CENTER" textFill="WHITE" HBox.hgrow="ALWAYS">
+                                                               <font>
+                                                                  <Font name="Segoe UI" size="24.0" />
+                                                               </font>
+                                                            </Label>
+                                                         </children>
+                                                      </HBox>
+                                                   </children>
+                                                   <padding>
+                                                      <Insets left="5.0" />
+                                                   </padding>
+                                                </AnchorPane>
+                                             </children>
+                                          </StackPane>
+                                          <VBox prefHeight="200.0" prefWidth="162.0" spacing="5.0" VBox.vgrow="ALWAYS">
+                                             <children>
+                                                <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Temperature">
+                                                   <font>
+                                                      <Font name="System Bold Italic" size="12.0" />
+                                                   </font>
+                                                </Text>
+                                                <LineChart fx:id="temperatureChart" prefHeight="300.0">
+                                                  <xAxis>
+                                                    <NumberAxis opacity="0.5" side="BOTTOM" tickLabelsVisible="false" tickMarkVisible="false" />
+                                                  </xAxis>
+                                                  <yAxis>
+                                                    <NumberAxis side="LEFT" />
+                                                  </yAxis>
+                                                   <VBox.margin>
+                                                      <Insets left="-10.0" right="-4.0" />
+                                                   </VBox.margin>
+                                                   <padding>
+                                                      <Insets left="-10.0" right="-4.0" />
+                                                   </padding>
+                                                </LineChart>
+                                             </children>
+                                          </VBox>
+                                          <Separator prefWidth="200.0" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </Tab>
                         <Tab text="FK">
                           <content>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                  <children>
                                     <VBox layoutX="8.0" layoutY="8.0" spacing="16.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="8.0">
                                        <children>
-                                          <StackPane fx:id="anchorPane1">
+                                          <StackPane fx:id="anchorPane1" VBox.vgrow="ALWAYS">
                                              <children>
                                                 <AnchorPane fx:id="fkLabelPane" style="-fx-background-color: #eda678;" StackPane.alignment="CENTER">
                                                    <children>
@@ -67,19 +125,19 @@
                                                 </AnchorPane>
                                              </children>
                                           </StackPane>
-                                          <JFXComboBox fx:id="jfxComboBox" focusColor="#eda678" labelFloat="true" prefHeight="25.0" prefWidth="85.0" promptText="Select" style="-fx-prompt-text-fill: white;" />
-                                          <Separator prefWidth="200.0">
+                                          <JFXComboBox fx:id="jfxComboBox" focusColor="#eda678" labelFloat="true" prefHeight="25.0" prefWidth="85.0" promptText="Select" style="-fx-prompt-text-fill: white;" VBox.vgrow="ALWAYS" />
+                                          <Separator prefWidth="200.0" VBox.vgrow="ALWAYS">
                                              <VBox.margin>
                                                 <Insets />
                                              </VBox.margin>
                                           </Separator>
-                                          <VBox spacing="5.0">
+                                          <VBox spacing="5.0" VBox.vgrow="ALWAYS">
                                              <children>
-                                                <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Location">
+                                                <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Location" VBox.vgrow="ALWAYS">
                                                    <font>
                                                       <Font name="System Bold" size="12.0" />
                                                    </font></Text>
-                                                <HBox prefHeight="16.0" prefWidth="234.0" spacing="2.0">
+                                                <HBox prefHeight="16.0" prefWidth="234.0" spacing="2.0" VBox.vgrow="ALWAYS">
                                                    <children>
                                                       <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="X:" />
                                                       <TextField fx:id="locationLbl0" editable="false" prefWidth="60.0" promptText="0" />
@@ -91,13 +149,13 @@
                                                 </HBox>
                                              </children>
                                           </VBox>
-                                          <VBox spacing="5.0">
+                                          <VBox spacing="5.0" VBox.vgrow="ALWAYS">
                                              <children>
-                                                <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Effector">
+                                                <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Effector" VBox.vgrow="ALWAYS">
                                                    <font>
                                                       <Font name="System Bold" size="12.0" />
                                                    </font></Text>
-                                                <HBox prefHeight="0.0" prefWidth="234.0" spacing="2.0">
+                                                <HBox prefHeight="0.0" prefWidth="234.0" spacing="2.0" VBox.vgrow="ALWAYS">
                                                    <children>
                                                       <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="X:" />
                                                       <TextField fx:id="effectorLbl0" editable="false" prefWidth="60.0" promptText="0" />
@@ -109,13 +167,13 @@
                                                 </HBox>
                                              </children>
                                           </VBox>
-                                          <VBox spacing="5.0">
+                                          <VBox spacing="5.0" VBox.vgrow="ALWAYS">
                                              <children>
                                                 <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Rotation">
                                                    <font>
                                                       <Font name="System Bold" size="12.0" />
                                                    </font></Text>
-                                                <HBox prefHeight="0.0" prefWidth="234.0" spacing="2.0">
+                                                <HBox prefHeight="0.0" prefWidth="234.0" spacing="2.0" VBox.vgrow="ALWAYS">
                                                    <children>
                                                       <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="X:" />
                                                       <TextField fx:id="rotationLbl00" editable="false" prefWidth="60.0" promptText="0" />
@@ -125,7 +183,7 @@
                                                       <TextField fx:id="rotationLbl02" editable="false" prefWidth="60.0" promptText="0" />
                                                    </children>
                                                 </HBox>
-                                                <HBox prefHeight="0.0" prefWidth="234.0" spacing="2.0">
+                                                <HBox prefHeight="0.0" prefWidth="234.0" spacing="2.0" VBox.vgrow="ALWAYS">
                                                    <children>
                                                       <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="X:" />
                                                       <TextField fx:id="rotationLbl10" editable="false" prefWidth="60.0" promptText="0" />
@@ -135,7 +193,7 @@
                                                       <TextField fx:id="rotationLbl12" editable="false" prefWidth="60.0" promptText="0" />
                                                    </children>
                                                 </HBox>
-                                                <HBox prefHeight="0.0" prefWidth="234.0" spacing="2.0">
+                                                <HBox prefHeight="0.0" prefWidth="234.0" spacing="2.0" VBox.vgrow="ALWAYS">
                                                    <children>
                                                       <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="X:" />
                                                       <TextField fx:id="rotationLbl20" editable="false" prefWidth="60.0" promptText="0" />
@@ -159,7 +217,7 @@
                                  <children>
                                     <VBox layoutX="154.0" layoutY="138.0" prefHeight="87.0" prefWidth="234.0" spacing="16.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="8.0">
                                        <children>
-                                          <StackPane fx:id="anchorPane2">
+                                          <StackPane fx:id="anchorPane2" VBox.vgrow="ALWAYS">
                                              <children>
                                                 <AnchorPane fx:id="ikLabelPane" style="-fx-background-color: #eda678;" StackPane.alignment="CENTER">
                                                    <children>
@@ -179,7 +237,7 @@
                                                 </AnchorPane>
                                              </children>
                                           </StackPane>
-                                          <VBox prefHeight="200.0" prefWidth="162.0" spacing="5.0">
+                                          <VBox prefHeight="200.0" prefWidth="162.0" spacing="5.0" VBox.vgrow="ALWAYS">
                                              <children>
                                                 <Separator prefWidth="200.0" />
                                                 <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Inverse Kinematics Algorithm">
@@ -218,14 +276,14 @@
                                              </children>
                                           </VBox>
                                           <Separator prefWidth="200.0" />
-                                          <VBox spacing="5.0">
+                                          <VBox spacing="5.0" VBox.vgrow="ALWAYS">
                                              <children>
-                                                <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Move to">
+                                                <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Move to" VBox.vgrow="ALWAYS">
                                                    <font>
                                                       <Font name="System Bold" size="12.0" />
                                                    </font>
                                                 </Text>
-                                                <HBox prefHeight="16.0" prefWidth="234.0" spacing="2.0">
+                                                <HBox prefHeight="16.0" prefWidth="234.0" spacing="2.0" VBox.vgrow="ALWAYS">
                                                    <children>
                                                       <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="X:" />
                                                       <TextField fx:id="targetLbl0" prefWidth="60.0" promptText="0" />
@@ -235,7 +293,7 @@
                                                       <TextField fx:id="targetLbl2" prefWidth="60.0" promptText="0" />
                                                    </children>
                                                 </HBox>
-                                                <AnchorPane>
+                                                <AnchorPane VBox.vgrow="ALWAYS">
                                                    <children>
                                                       <JFXButton fx:id="setTargetBtn" alignment="CENTER" buttonType="RAISED" ellipsisString="" focusTraversable="false" onAction="#onSetTarget" prefHeight="25.0" prefWidth="72.0" text="Start" textAlignment="CENTER" textFill="WHITE" AnchorPane.rightAnchor="5.0">
                                                          <font>
@@ -258,7 +316,7 @@
                                  <children>
                                     <VBox layoutX="8.0" layoutY="8.0" prefHeight="87.0" prefWidth="234.0" spacing="16.0" AnchorPane.leftAnchor="8.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="8.0">
                                        <children>
-                                          <StackPane fx:id="anchorPane3">
+                                          <StackPane fx:id="anchorPane3" VBox.vgrow="ALWAYS">
                                              <children>
                                                 <AnchorPane fx:id="jstLabelPane" style="-fx-background-color: #eda678;" StackPane.alignment="CENTER">
                                                    <children>
@@ -278,7 +336,7 @@
                                                 </AnchorPane>
                                              </children>
                                           </StackPane>
-                                          <VBox prefHeight="200.0" prefWidth="162.0" spacing="5.0">
+                                          <VBox prefHeight="200.0" prefWidth="162.0" spacing="5.0" VBox.vgrow="ALWAYS">
                                              <children>
                                                 <Separator prefWidth="200.0" />
                                                 <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Joint Space Trajectory Method">

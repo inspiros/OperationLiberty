@@ -1,4 +1,4 @@
-package com.hust.utils.data;
+package com.hust.utils.algebra;
 
 import java.text.DecimalFormat;
 
