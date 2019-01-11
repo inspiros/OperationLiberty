@@ -2,10 +2,10 @@ package com.hust.view.demo;
 
 public class Target {
 
-	private PWindow app;
+	private DemoWindow app;
 	private float x, y, z;
 
-	public Target(PWindow app, float x, float y, float z) {
+	public Target(DemoWindow app, float x, float y, float z) {
 		this.app = app;
 		this.x = x;
 		this.y = y;

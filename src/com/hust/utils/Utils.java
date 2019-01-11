@@ -13,6 +13,8 @@ import com.hust.utils.algebra.FloatVector3;
  * operations. Version: 0.4 Date : 04/12/2015
  */
 public final class Utils {
+
+	public static final float FLOAT_EQUALITY_TOLERANCE = 0.0001f;
 	
 	// Constants to translate values from degrees to radians and vice versa
 	public static final float DEGS_TO_RADS = (float) Math.PI / 180.0f;

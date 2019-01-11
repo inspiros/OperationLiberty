@@ -3,18 +3,15 @@ package com.hust.view.demo;
 import java.util.LinkedList;
 
 import com.hust.core.Configurations;
-import com.hust.core.Main;
 import com.hust.model.Models;
 import com.hust.utils.algebra.FloatVector3;
 
-import g4p_controls.G4P;
-import g4p_controls.GCScheme;
 import processing.opengl.PJOGL;
 
-public class PWindow extends HApplet {
+public class DemoWindow extends HApplet {
 
-	private Models data;
-	public PWindow app = this;
+	private Models model;
+	public DemoWindow app = this;
 
 	public final String appPath = sketchPath();
 
@@ -25,9 +22,9 @@ public class PWindow extends HApplet {
 
 	private LinkedList<Target> targets = new LinkedList<Target>();
 
-	public PWindow() {
-		data = Main.model;
-		componentsDrawer.addDrawable(this.data.robot);
+	public DemoWindow(Models model) {
+		this.model = model;
+		componentsDrawer.addDrawable(this.model.robot);
 		HApplet.runSketch(new String[] { this.getClass().getSimpleName() }, this);
 	}
 
@@ -48,10 +45,10 @@ public class PWindow extends HApplet {
 		surface.setTitle(Configurations.PROPERTIES.getProperty("demo.title"));
 		surface.setFrameRate(30);
 
-		cameraPosition = new FloatVector3(width / 3, height / 3, data.robot.getEndEffector().z);
+		cameraPosition = new FloatVector3(width / 3, height / 3, model.robot.getEndEffector().z);
 		centerPosition = new FloatVector3();
-
-		createGui();
+		
+		Configurations.MODULES_INITIALIZATION.get("demo").countDown();
 	}
 
 	public void render() {
@@ -111,57 +108,6 @@ public class PWindow extends HApplet {
 	@Override
 	public void mouseWheel(processing.event.MouseEvent event) {
 		cameraPosition = cameraPosition.mul((cameraPosition.length() + 3 * event.getCount()) / cameraPosition.length());
-	}
-
-	/**
-	 * GUI
-	 */
-	private void createGui() {
-		G4P.messagesEnabled(false);
-		G4P.setGlobalColorScheme(GCScheme.CYAN_SCHEME);
-
-//		guiController = new ControlP5(this, createFont("Cambria", 12));
-
-//		for (int i = 0; i < data.getDof(); i++) {
-//			Slider slider = guiController.addSlider("sliderAngle" + i)
-//					.setPosition(width / 10, height / 8 + height / 10 * i).setSize(width / 4, height / 12)
-//					.setValue(data.getArm().getBone(i).joint.angle.get())
-//					.setRange(data.getArm().getBone(i).joint.lowerLimit, data.getArm().getBone(i).joint.upperLimit)
-//					.setLabel("θ" + i).addCallback(new IdCallbackListener(i) {
-//
-//						@Override
-//						public void controlEvent(CallbackEvent event) {
-//							if (event.getAction() == 100) {
-//								targets.clear();
-//
-//								data.setTargetDegs(getId(), event.getController().getValue());
-//							}
-//						}
-//					});
-//			sliders.add(slider);
-//		}
-//		sliders.trimToSize();
-
-//		guiController.addButton("forwardKinematics").setPosition(width / 10, height / 20).setSize(width / 10, 20)
-//				.setLabel("FK").addCallback(new CallbackListener() {
-//
-//					@Override
-//					public void controlEvent(CallbackEvent event) {
-//						if (event.getAction() == 100) {
-//
-//						}
-//					}
-//				});
-//		guiController.addButton("inverseKinematics").setPosition(width * 3 / 12, height / 20).setSize(width / 10, 20)
-//				.setLabel("IK").addCallback(new CallbackListener() {
-//
-//					@Override
-//					public void controlEvent(CallbackEvent event) {
-//						if (event.getAction() == 100) {
-//							new CoordinatePicker(app);
-//						}
-//					}
-//				});
 	}
 
 	public void updateTarget(FloatVector3 t) {

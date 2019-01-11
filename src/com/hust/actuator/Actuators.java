@@ -23,6 +23,8 @@ public class Actuators {
 				e.printStackTrace();
 			}
 		}
+
+		Configurations.MODULES_INITIALIZATION.get("actuator").countDown();
 		return this;
 	}
 }

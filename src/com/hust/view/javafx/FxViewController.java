@@ -46,12 +46,14 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class FxApplicationController implements Initializable {
+public class FxViewController implements Initializable {
 
+	/**
+	 * Controlled model.
+	 */
 	private Models model;
 
 	private Stage stage;
-
 	private Scene scene;
 
 	@FXML
@@ -248,9 +250,9 @@ public class FxApplicationController implements Initializable {
 			return;
 		}
 
-		if (Main.demo != null) {
+		if (FxView.instance.view.demo != null) {
 			// TODO Demo
-			Main.demo.updateTarget(newPosition);
+			FxView.instance.view.demo.updateTarget(newPosition);
 		}
 		// Ready to move.
 		model.moveToPosition(newPosition,
@@ -493,7 +495,7 @@ public class FxApplicationController implements Initializable {
 		model.vault.dataSeries.forEach((dataSeries) -> {
 			XYChart.Series<Number, Number> chartSeries = new XYChart.Series<>();
 			chartSeries.setName("lx-16a");
-			
+
 			temperatureChart.getData().add(chartSeries);
 
 			ObservableList<Number> series = dataSeries.series.get("temperature");
@@ -513,7 +515,7 @@ public class FxApplicationController implements Initializable {
 					c.next();
 					for (Number number : c.getAddedSubList()) {
 						Platform.runLater(() -> {
-							
+
 							if (list.size() == Configurations.maxChartNodes) {
 								list.remove(0);
 //								((NumberAxis) temperatureChart.getYAxis())

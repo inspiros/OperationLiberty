@@ -56,26 +56,13 @@ public class LewansoulLX16A {
 
 //	private BinarySemaphore readSemaphore = new BinarySemaphore(false);
 
+	/**
+	 * Default constructor.
+	 * 
+	 * @throws SerialPortException
+	 */
 	public LewansoulLX16A() throws SerialPortException {
 
-		String[] portNames = SerialPortList.getPortNames();
-
-		for (int i = portNames.length - 1; i >= 0; i--) {
-			try {
-				serialPort = new SerialPort(portNames[i]);
-				serialPort.openPort();
-				serialPort.setParams(SerialPort.BAUDRATE_115200, SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
-						SerialPort.PARITY_NONE);
-				break;
-			} catch (SerialPortException e) {
-			}
-		}
-		if (serialPort == null || !serialPort.isOpened()) {
-			System.err.println("All serial ports busy! Using virtual debug actuator...");
-			return;
-		}
-
-		setupSerialCallback();
 	}
 
 	/**
@@ -111,6 +98,60 @@ public class LewansoulLX16A {
 				}
 			}
 		});
+	}
+
+	/**
+	 * Automatically connect to a port.
+	 * 
+	 * @param portname
+	 * @throws SerialPortException
+	 */
+	public void autoConnect() {
+		String[] portNames = SerialPortList.getPortNames();
+
+		for (int i = 0; i < portNames.length; i++) {
+			try {
+				serialPort = new SerialPort(portNames[i]);
+				serialPort.openPort();
+				serialPort.setParams(SerialPort.BAUDRATE_115200, SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
+						SerialPort.PARITY_NONE);
+				break;
+			} catch (SerialPortException e) {
+			}
+		}
+		if (serialPort == null || !serialPort.isOpened()) {
+			System.err.println("All serial ports busy! Using virtual debug actuator...");
+			return;
+		}
+
+		if (serialPort.isOpened()) {
+			try {
+				setupSerialCallback();
+			} catch (SerialPortException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	/**
+	 * Manually connect to a port.
+	 * 
+	 * @param portname
+	 * @throws SerialPortException
+	 */
+	public void connect(String portname) throws SerialPortException {
+		serialPort = new SerialPort(portname);
+		serialPort.openPort();
+		serialPort.setParams(SerialPort.BAUDRATE_115200, SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
+				SerialPort.PARITY_NONE);
+		if (serialPort == null || !serialPort.isOpened()) {
+			System.err.println("All serial ports busy! Using virtual debug actuator...");
+			return;
+		}
+
+		if (serialPort.isOpened()) {
+			setupSerialCallback();
+		}
 	}
 
 	/**

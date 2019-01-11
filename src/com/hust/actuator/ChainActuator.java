@@ -1,8 +1,11 @@
 package com.hust.actuator;
 
+import com.hust.core.Configurations;
 import com.hust.model.Models;
 import com.hust.utils.Utils;
 import com.hust.utils.concurrent.FunnelService;
+import com.pi4j.io.serial.RaspberryPiSerial;
+import com.pi4j.io.serial.Serial;
 
 import jssc.SerialPortException;
 
@@ -10,6 +13,7 @@ import jssc.SerialPortException;
  * A class for controlling actuators representing a joint.
  * <p>
  * For other branch of servos, just extends another class.
+ * </p>
  * 
  * @author Inspiros
  *
@@ -24,9 +28,15 @@ public class ChainActuator extends LewansoulLX16A {
 
 	public Models model;
 
+	/**
+	 * Constructor.
+	 * 
+	 * @param model
+	 * @throws SerialPortException
+	 */
 	public ChainActuator(Models model) throws SerialPortException {
-		super();
 		this.model = model;
+		setupConnection();
 		setupServices();
 	}
 
@@ -42,6 +52,48 @@ public class ChainActuator extends LewansoulLX16A {
 		return ((float) pos - 500) / 500 * 120;
 	}
 
+	/**
+	 * Connecty boiz.
+	 * 
+	 * @return itself.
+	 */
+	public ChainActuator setupConnection() {
+		if (Configurations.PROPERTIES.get("platform").equals("LINUX")) {
+			// Native Raspberry Pi.
+			try {
+				connect(Serial.FIRST_USB_COM_PORT);
+			} catch (Exception e0) {
+				try {
+					connect(Serial.SECOND_USB_COM_PORT);
+				} catch (Exception e1) {
+					try {
+						connect(Serial.DEFAULT_COM_PORT);
+					} catch (Exception e2) {
+						try {
+							connect(RaspberryPiSerial.AMA0_COM_PORT);
+						} catch (Exception e3) {
+							try {
+								connect(RaspberryPiSerial.S0_COM_PORT);
+							} catch (Exception e4) {
+								autoConnect();
+							}
+						}
+					}
+				}
+			}
+		} else {
+			// Test machine.
+			autoConnect();
+		}
+
+		return this;
+	}
+
+	/**
+	 * Sendy boiz.
+	 * 
+	 * @return itself.
+	 */
 	public ChainActuator setupServices() {
 		if (model.robot == null) {
 			return this;

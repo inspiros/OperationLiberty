@@ -9,5 +9,9 @@ demo.height=480
 demo.title=Operation Liberty - Demo
 
 # View config
+view.splash.fullscreen=false
+view.splash.native-fullscreen=true
+
 view.fullscreen=false
+view.native-fullscreen=true
 view.title=Operation Liberty

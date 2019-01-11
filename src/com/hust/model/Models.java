@@ -1,5 +1,6 @@
 package com.hust.model;
 
+import com.hust.core.Configurations;
 import com.hust.model.data.DataSeries;
 import com.hust.model.data.DataVault;
 import com.hust.model.robot.Chain;
@@ -29,10 +30,10 @@ public class Models {
 	public Models setupModel() {
 
 		robot = new Chain();
-		robot.addConsecutiveBone(new FloatVector3(0, 0, 50), FloatVector3.Z_AXIS, 0, -120, 120);
-		robot.addConsecutiveBone(new FloatVector3(0, 0, 40), FloatVector3.Y_AXIS, 45, -120, 120);
-		robot.addConsecutiveBone(new FloatVector3(0, 0, 40), FloatVector3.X_AXIS, 0, -120, 120);
-		robot.addConsecutiveBone(new FloatVector3(0, 0, 30), FloatVector3.Y_AXIS, 45, -120, 120);
+		robot.addConsecutiveBone(new FloatVector3(0, 0, 30), FloatVector3.Z_AXIS, 0, -60, 60);
+		robot.addConsecutiveBone(new FloatVector3(10, 0, 60), FloatVector3.Y_AXIS, 45, -90, 90);
+		robot.addConsecutiveBone(new FloatVector3(10, 0, 50), FloatVector3.Y_AXIS, 0, -90, 90);
+		robot.addConsecutiveBone(new FloatVector3(10, 0, 50), FloatVector3.Y_AXIS, 45, -90, 90);
 		// robot.addConsecutiveBone(new FloatVector3(0, 0, 20), FloatVector3.Y_AXIS, 0,
 		// -120, 120);
 
@@ -43,6 +44,7 @@ public class Models {
 
 		kinematicsSolver.setChain(robot);
 
+		Configurations.MODULES_INITIALIZATION.get("model").countDown();
 		return this;
 	}
 
@@ -66,7 +68,7 @@ public class Models {
 		return robot.getAngleDegs(i);
 	}
 
-	public void setTargetDegs(float... anglesDegs) {
+	public void setTargetsDegs(float... anglesDegs) {
 		robot.setTargetsDegs(anglesDegs);
 	}
 

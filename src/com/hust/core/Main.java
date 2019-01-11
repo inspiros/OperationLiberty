@@ -5,7 +5,6 @@ import java.io.IOException;
 import com.hust.actuator.Actuators;
 import com.hust.model.Models;
 import com.hust.view.Views;
-import com.hust.view.demo.PWindow;
 //import com.pi4j.wiringpi.Gpio;
 
 import jssc.SerialPortException;
@@ -13,8 +12,6 @@ import jssc.SerialPortException;
 public class Main {
 
 	public static Views view;
-
-	public static PWindow demo;
 
 	public static Models model;
 
@@ -27,9 +24,12 @@ public class Main {
 
 		Thread.setDefaultUncaughtExceptionHandler(controllerExceptionHandler);
 
+		new Thread(() -> {
+			view = new Views().setupViews();
+		}).start();
+
 		model = new Models().setupModel();
 		actuator = new Actuators(model).setupActuators();
-		view = new Views(model).setupViews();
 
 		// Gpio.wiringPiSetup();
 
@@ -67,7 +67,6 @@ public class Main {
 //		} catch (InterruptedException e) {
 //			e.printStackTrace();
 //		}
-		Thread.currentThread().join();
 	}
 
 	/**

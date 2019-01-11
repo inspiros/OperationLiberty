@@ -43,8 +43,6 @@ import com.hust.utils.Utils;
  * @version 0.5 - 22/12/2014
  */
 public class FloatMatrix4 {
-	private static final float FLOAT_EQUALITY_TOLERANCE = 0.0001f;
-
 	// ---------- Public Properties ---------
 
 	// These properties are deliberately declared as public for fast access without
@@ -377,7 +375,7 @@ public class FloatMatrix4 {
 	 */
 	public void setXBasis(FloatVector3 v) {
 		// If the provided FloatVector3 is not normalised then normalise it
-		if (!v.lengthIsApproximately(1.0f, FLOAT_EQUALITY_TOLERANCE)) {
+		if (!v.lengthIsApproximately(1.0f, Utils.FLOAT_EQUALITY_TOLERANCE)) {
 			v.normalize();
 		}
 
@@ -415,7 +413,7 @@ public class FloatMatrix4 {
 
 		// Construct a FloatVector3 from the array and normalise it if required
 		FloatVector3 v = new FloatVector3(f[0], f[1], f[2]);
-		if (!v.lengthIsApproximately(1.0f, FLOAT_EQUALITY_TOLERANCE)) {
+		if (!v.lengthIsApproximately(1.0f, Utils.FLOAT_EQUALITY_TOLERANCE)) {
 			v.normalize();
 		}
 
@@ -473,7 +471,7 @@ public class FloatMatrix4 {
 	 */
 	public void setYBasis(FloatVector3 v) {
 		// If the provided FloatVector3 is not normalised then normalise it
-		if (!v.lengthIsApproximately(1.0f, FLOAT_EQUALITY_TOLERANCE)) {
+		if (!v.lengthIsApproximately(1.0f, Utils.FLOAT_EQUALITY_TOLERANCE)) {
 			v.normalize();
 		}
 
@@ -511,7 +509,7 @@ public class FloatMatrix4 {
 
 		// Construct a FloatVector3 from the array and normalise it if required
 		FloatVector3 v = new FloatVector3(f[0], f[1], f[2]);
-		if (!v.lengthIsApproximately(1.0f, FLOAT_EQUALITY_TOLERANCE)) {
+		if (!v.lengthIsApproximately(1.0f, Utils.FLOAT_EQUALITY_TOLERANCE)) {
 			v.normalize();
 		}
 
@@ -567,7 +565,7 @@ public class FloatMatrix4 {
 	 */
 	public void setZBasis(FloatVector3 v) {
 		// If the provided FloatVector3 is not normalised then normalise it
-		if (!v.lengthIsApproximately(1.0f, FLOAT_EQUALITY_TOLERANCE)) {
+		if (!v.lengthIsApproximately(1.0f, Utils.FLOAT_EQUALITY_TOLERANCE)) {
 			v.normalize();
 		}
 
@@ -605,7 +603,7 @@ public class FloatMatrix4 {
 
 		// Construct a FloatVector3 from the array and normalise it if required
 		FloatVector3 v = new FloatVector3(f[0], f[1], f[2]);
-		if (!v.lengthIsApproximately(1.0f, FLOAT_EQUALITY_TOLERANCE)) {
+		if (!v.lengthIsApproximately(1.0f, Utils.FLOAT_EQUALITY_TOLERANCE)) {
 			v.normalize();
 		}
 

@@ -1,8 +1,11 @@
 package com.hust.core;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.CountDownLatch;
 
 import com.hust.model.robot.Joint;
 import com.hust.model.robot.Joint.TrajectoryMethod;
@@ -14,6 +17,11 @@ public final class Configurations {
 	 * Properties containing configurations loaded at start-up of application.
 	 */
 	public static final Properties PROPERTIES = new Properties();
+
+	/**
+	 * Modules of this application.
+	 */
+	public static final Map<String, CountDownLatch> MODULES_INITIALIZATION = new HashMap<>();
 
 	/**
 	 * Load properties.
@@ -34,6 +42,30 @@ public final class Configurations {
 			osProperty = "OTHER";
 		}
 		PROPERTIES.put("platform", osProperty);
+
+		/*
+		 * Setup modules loaders.
+		 */
+		MODULES_INITIALIZATION.put("model", new CountDownLatch(1));
+		
+		if (Boolean.parseBoolean(PROPERTIES.getProperty("view"))) {
+			MODULES_INITIALIZATION.put("view", new CountDownLatch(1));
+		} else {
+			MODULES_INITIALIZATION.put("view", new CountDownLatch(0));
+		}
+		
+		if (Boolean.parseBoolean(PROPERTIES.getProperty("demo"))) {
+			MODULES_INITIALIZATION.put("demo", new CountDownLatch(1));
+		} else {
+			MODULES_INITIALIZATION.put("demo", new CountDownLatch(0));
+		}
+		
+		if (Boolean.parseBoolean(PROPERTIES.getProperty("actuator"))) {
+			MODULES_INITIALIZATION.put("actuator", new CountDownLatch(1));
+		} else {
+			MODULES_INITIALIZATION.put("actuator", new CountDownLatch(0));
+		}
+
 	}
 
 	/**
@@ -77,7 +109,7 @@ public final class Configurations {
 	 * @see FxSceneSyncService
 	 */
 	public static long viewUpdateInterval = 60L;
-	
+
 	/**
 	 * Max displayed node in charts.
 	 */
