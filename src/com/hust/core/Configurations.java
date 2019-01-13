@@ -9,7 +9,7 @@ import java.util.concurrent.CountDownLatch;
 
 import com.hust.model.robot.Joint;
 import com.hust.model.robot.Joint.TrajectoryMethod;
-import com.hust.view.javafx.FxSceneSyncService;
+import com.hust.view.javafx.SceneSyncService;
 
 public final class Configurations {
 
@@ -47,19 +47,20 @@ public final class Configurations {
 		 * Setup modules loaders.
 		 */
 		MODULES_INITIALIZATION.put("model", new CountDownLatch(1));
-		
+
 		if (Boolean.parseBoolean(PROPERTIES.getProperty("view"))) {
 			MODULES_INITIALIZATION.put("view", new CountDownLatch(1));
 		} else {
 			MODULES_INITIALIZATION.put("view", new CountDownLatch(0));
 		}
-		
-		if (Boolean.parseBoolean(PROPERTIES.getProperty("demo"))) {
+
+		if (Boolean.parseBoolean(PROPERTIES.getProperty("demo"))
+				&& !PROPERTIES.getProperty("platform").equals("LINUX")) {
 			MODULES_INITIALIZATION.put("demo", new CountDownLatch(1));
 		} else {
 			MODULES_INITIALIZATION.put("demo", new CountDownLatch(0));
 		}
-		
+
 		if (Boolean.parseBoolean(PROPERTIES.getProperty("actuator"))) {
 			MODULES_INITIALIZATION.put("actuator", new CountDownLatch(1));
 		} else {
@@ -106,7 +107,7 @@ public final class Configurations {
 	/**
 	 * Delay between update time of UI, 50 millis as default value.
 	 * 
-	 * @see FxSceneSyncService
+	 * @see SceneSyncService
 	 */
 	public static long viewUpdateInterval = 60L;
 

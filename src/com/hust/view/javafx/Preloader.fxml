@@ -11,10 +11,9 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<StackPane style="-fx-background-color: grey;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane style="-fx-background-color: #4a4a4a;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.hust.view.javafx.PreloaderController">
    <children>
-      <AnchorPane prefHeight="280.0" prefWidth="440.0" style="-fx-background-color: #eda678;">
+      <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="280.0" prefWidth="440.0" style="-fx-background-color: #eda678;" StackPane.alignment="CENTER">
          <children>
             <AnchorPane layoutX="42.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" style="-fx-background-color: #3D4956;" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
                <children>
@@ -28,7 +27,7 @@
                         <Image url="@../../../../resources/logo.png" />
                      </image>
                   </ImageView>
-                  <VBox layoutX="202.0" layoutY="50.0" spacing="16.0">
+                  <VBox layoutX="196.0" layoutY="49.0" spacing="16.0">
                      <children>
                         <VBox>
                            <children>
@@ -38,7 +37,7 @@
                                  </font>
                               </Label>
                               <Separator prefWidth="200.0" />
-                              <Label layoutX="10.0" layoutY="10.0" text="Dr. Trần Văn Tuấn" textFill="WHITE">
+                              <Label fx:id="supervisorLabel" layoutX="10.0" layoutY="10.0" text="supervisor" textFill="WHITE">
                                  <font>
                                     <Font name="System Bold Italic" size="20.0" />
                                  </font>
@@ -53,17 +52,17 @@
                                  </font>
                               </Label>
                               <Separator prefWidth="200.0" />
-                              <Label layoutX="10.0" layoutY="10.0" text="Trần Hoàng Nhật" textFill="WHITE">
+                              <Label fx:id="author1Label" layoutX="10.0" layoutY="10.0" text="author1" textFill="WHITE">
                                  <font>
                                     <Font name="System Italic" size="18.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="10.0" layoutY="57.0" text="Nguyễn Tiến Nam" textFill="WHITE">
+                              <Label fx:id="author2Label" layoutX="10.0" layoutY="57.0" text="author2" textFill="WHITE">
                                  <font>
                                     <Font name="System Italic" size="18.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="10.0" layoutY="92.0" text="Tô Tiến Bệu" textFill="WHITE">
+                              <Label fx:id="author3Label" layoutX="10.0" layoutY="92.0" text="author3" textFill="WHITE">
                                  <font>
                                     <Font name="System Italic" size="18.0" />
                                  </font>

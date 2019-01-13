@@ -1,3 +1,6 @@
+#
+monthaytuanden=false
+
 # Run mode
 demo=true
 view=true

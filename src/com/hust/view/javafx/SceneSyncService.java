@@ -8,7 +8,7 @@ import com.hust.core.Configurations;
 
 import javafx.application.Platform;
 
-public abstract class FxSceneSyncService<T> implements Runnable {
+public abstract class SceneSyncService<T> implements Runnable {
 
 	protected ExecutorService executorService;
 	protected Future<?> future;
@@ -17,7 +17,7 @@ public abstract class FxSceneSyncService<T> implements Runnable {
 	protected T futureVal = null;
 	protected boolean hasTask;
 
-	public FxSceneSyncService() {
+	public SceneSyncService() {
 		executorService = Executors.newSingleThreadExecutor();
 	}
 

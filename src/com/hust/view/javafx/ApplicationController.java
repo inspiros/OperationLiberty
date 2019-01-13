@@ -46,7 +46,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class FxViewController implements Initializable {
+public class ApplicationController implements Initializable {
 
 	/**
 	 * Controlled model.
@@ -85,12 +85,12 @@ public class FxViewController implements Initializable {
 	/**
 	 * Location and effector listeners.
 	 */
-	private FxSceneSyncService<FloatVector3> locationSync, effectorSync;
+	private SceneSyncService<FloatVector3> locationSync, effectorSync;
 
 	/**
 	 * Rotation listener.
 	 */
-	private FxSceneSyncService<FloatQuaternion> rotationSync;
+	private SceneSyncService<FloatQuaternion> rotationSync;
 
 	@FXML
 	private ToggleGroup ikToggleGroup, jstToggleGroup;
@@ -189,7 +189,7 @@ public class FxViewController implements Initializable {
 		targetLbl2.setOnKeyPressed(targetLbl0.getOnKeyPressed());
 
 		// Sum bad boiz
-		locationSync = new FxSceneSyncService<FloatVector3>() {
+		locationSync = new SceneSyncService<FloatVector3>() {
 
 			@Override
 			public void doTask() {
@@ -199,7 +199,7 @@ public class FxViewController implements Initializable {
 			}
 		};
 
-		effectorSync = new FxSceneSyncService<FloatVector3>() {
+		effectorSync = new SceneSyncService<FloatVector3>() {
 
 			@Override
 			public void doTask() {
@@ -209,7 +209,7 @@ public class FxViewController implements Initializable {
 			}
 		};
 
-		rotationSync = new FxSceneSyncService<FloatQuaternion>() {
+		rotationSync = new SceneSyncService<FloatQuaternion>() {
 
 			@Override
 			public void doTask() {
@@ -381,7 +381,7 @@ public class FxViewController implements Initializable {
 			});
 
 			// Angle change listener
-			FxSceneSyncService<Float> angleListener = new FxSceneSyncService<Float>() {
+			SceneSyncService<Float> angleListener = new SceneSyncService<Float>() {
 				@Override
 				public void doTask() {
 					slider.setValue(currentVal.doubleValue());

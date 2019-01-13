@@ -20,7 +20,7 @@ import javafx.util.Duration;
 import jfxtras.styles.jmetro8.JMetro;
 import jfxtras.styles.jmetro8.JMetro.Style;
 
-public class FxView extends Application {
+public class FxView extends HApplication {
 
 	/**
 	 * Instance of this app.
@@ -35,7 +35,7 @@ public class FxView extends Application {
 	/**
 	 * Controller class instance.
 	 */
-	public FxViewController controller;
+	public ApplicationController controller;
 
 	/**
 	 * Primary window.
@@ -80,6 +80,7 @@ public class FxView extends Application {
 
 				// Apply Metro theme.
 				Platform.runLater(() -> {
+
 					this.stage = new Stage();
 					this.stage.setScene(scene);
 					this.stage.setTitle("Operation Liberty");
@@ -96,7 +97,7 @@ public class FxView extends Application {
 						this.stage.setFullScreen(true);
 					}
 
-					this.stage.centerOnScreen();
+					// this.stage.centerOnScreen();
 
 					this.stage.setOnCloseRequest((e) -> {
 						if (view.demo != null) {
@@ -116,9 +117,11 @@ public class FxView extends Application {
 				Configurations.MODULES_INITIALIZATION.get("actuator").await();
 				Configurations.MODULES_INITIALIZATION.get("demo").await();
 
+				System.out.println("Here");
 				Platform.runLater(() -> {
 					fadeSplash.play();
 					this.stage.show();
+					centerize(this.stage);
 				});
 
 			} catch (Exception e) {
@@ -135,20 +138,21 @@ public class FxView extends Application {
 		this.splash = splashStage;
 
 		Scene splashScene = new Scene(this.splashPane, Color.TRANSPARENT);
-		splashStage.setScene(splashScene);
+		this.splash.setScene(splashScene);
 
-		splashStage.centerOnScreen();
-		splashStage.setAlwaysOnTop(true);
-		splashStage.initStyle(StageStyle.UNDECORATED);
-		splashStage.initStyle(StageStyle.TRANSPARENT);
+		// this.splash.centerOnScreen();
+
+		this.splash.setAlwaysOnTop(true);
+		this.splash.initStyle(StageStyle.UNDECORATED);
+		this.splash.initStyle(StageStyle.TRANSPARENT);
 
 		if (Boolean.parseBoolean(Configurations.PROPERTIES.getProperty("view.splash.fullscreen"))
 				|| (Configurations.PROPERTIES.getProperty("platform").equals("LINUX") && Boolean
 						.parseBoolean(Configurations.PROPERTIES.getProperty("view.splash.native-fullscreen")))) {
 			this.splash.setFullScreen(true);
 		}
-
 		splashStage.show();
+		centerize(this.splash);
 	}
 
 	public synchronized static FxView getInstance(Views view) {

@@ -22,7 +22,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" style="-fx-background-color: #3D4956;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.hust.view.javafx.FxViewController">
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" style="-fx-background-color: #3D4956;" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.hust.view.javafx.ApplicationController">
    <children>
       <SplitPane dividerPositions="0.6" prefHeight="480.0" prefWidth="640.0" style="-fx-background-color: transparent;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <items>
@@ -258,7 +258,7 @@
                                                       <OctIconView glyphName="TRIANGLE_RIGHT" size="14.0" />
                                                    </graphic>
                                                 </JFXToggleNode>
-                                                <JFXToggleNode fx:id="ikTargetTriangle" alignment="CENTER_LEFT" ellipsisString="" layoutX="10.0" layoutY="69.0" prefHeight="25.0" prefWidth="200.0" selected="true" text="Target Triangle (CCD)" textFill="WHITE" toggleGroup="$ikToggleGroup">
+                                                <JFXToggleNode fx:id="ikTargetTriangle" alignment="CENTER_LEFT" ellipsisString="" layoutX="10.0" layoutY="69.0" prefHeight="25.0" prefWidth="200.0" selected="true" text="Cyclic Coordinate Descent" textFill="WHITE" toggleGroup="$ikToggleGroup">
                                                    <graphic>
                                                       <OctIconView glyphName="TRIANGLE_RIGHT" size="14.0" />
                                                    </graphic>

@@ -1,3 +1,4 @@
 eclipse.preferences.version=1
 encoding//src/com/hust/view/demo/DemoWindow.java=UTF-8
-encoding//src/com/hust/view/javafx/FxViewController.java=UTF-8
+encoding//src/com/hust/view/javafx/ApplicationController.java=UTF-8
+encoding//src/com/hust/view/javafx/PreloaderController.java=UTF-8
