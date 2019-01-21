@@ -2,6 +2,7 @@ package com.hust.model.robot;
 
 import java.util.ArrayList;
 
+import com.hust.utils.FloatValidator;
 import com.hust.utils.Lockable;
 import com.hust.utils.algebra.FloatMatrix4;
 import com.hust.utils.algebra.FloatQuaternion;
@@ -184,6 +185,26 @@ public class Chain implements Drawable<HApplet>, Lockable {
 		}
 	}
 
+	public void setTargetsRads(ArrayList<Float> anglesRads) {
+		int loops = Math.min(bones.size(), anglesRads.size());
+		for (int i = 0; i < loops; i++) {
+			Float angleDegs = anglesRads.get(i);
+			if (FloatValidator.validate(angleDegs)) {
+				bones.get(i).joint.setTargetRads(angleDegs);
+			}
+		}
+	}
+
+	public void setTargetsDegs(ArrayList<Float> anglesDegs) {
+		int loops = Math.min(bones.size(), anglesDegs.size());
+		for (int i = 0; i < loops; i++) {
+			Float angleDegs = anglesDegs.get(i);
+			if (FloatValidator.validate(angleDegs)) {
+				bones.get(i).joint.setTargetDegs(angleDegs);
+			}
+		}
+	}
+
 	public void setTargetRads(int id, float angleRads) {
 		bones.get(id).joint.setTargetRads(angleRads);
 	}
@@ -203,6 +224,26 @@ public class Chain implements Drawable<HApplet>, Lockable {
 		int loops = Math.min(bones.size(), anglesDegs.length);
 		for (int i = 0; i < loops; i++) {
 			bones.get(i).joint.prepareTargetDegs(anglesDegs[i]);
+		}
+	}
+
+	public void prepareTargetsRads(ArrayList<Float> anglesRads) {
+		int loops = Math.min(bones.size(), anglesRads.size());
+		for (int i = 0; i < loops; i++) {
+			Float angleDegs = anglesRads.get(i);
+			if (FloatValidator.validate(angleDegs)) {
+				bones.get(i).joint.prepareTargetRads(anglesRads.get(i));
+			}
+		}
+	}
+
+	public void prepareTargetsDegs(ArrayList<Float> anglesDegs) {
+		int loops = Math.min(bones.size(), anglesDegs.size());
+		for (int i = 0; i < loops; i++) {
+			Float angleDegs = anglesDegs.get(i);
+			if (FloatValidator.validate(angleDegs)) {
+				bones.get(i).joint.prepareTargetDegs(anglesDegs.get(i));
+			}
 		}
 	}
 

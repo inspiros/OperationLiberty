@@ -117,7 +117,6 @@ public class FxView extends HApplication {
 				Configurations.MODULES_INITIALIZATION.get("actuator").await();
 				Configurations.MODULES_INITIALIZATION.get("demo").await();
 
-				System.out.println("Here");
 				Platform.runLater(() -> {
 					fadeSplash.play();
 					this.stage.show();
@@ -138,6 +137,7 @@ public class FxView extends HApplication {
 		this.splash = splashStage;
 
 		Scene splashScene = new Scene(this.splashPane, Color.TRANSPARENT);
+		this.splash.getIcons().add(new Image(getClass().getResourceAsStream("/resources/icon.png")));
 		this.splash.setScene(splashScene);
 
 		// this.splash.centerOnScreen();

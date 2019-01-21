@@ -47,7 +47,7 @@ public class KinematicsSolver {
 	private Chain chain;
 
 	private List<KinematicsConstraint> constraintList = new ArrayList<KinematicsConstraint>();
-	
+
 	/**
 	 * Default Constructor.
 	 * 

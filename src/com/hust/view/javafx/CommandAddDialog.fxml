@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXRadioButton?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane prefWidth="320.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.hust.view.javafx.CommandAddDialogController">
+	<children>
+		<VBox layoutX="148.0" layoutY="14.0" prefHeight="214.0" prefWidth="320.0" spacing="5.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+			<children>
+				<JFXRadioButton fx:id="jointCommand" accessibleText="jointCommand" selected="true" text="Rotate Joints:">
+					<toggleGroup>
+						<ToggleGroup fx:id="commandType" />
+					</toggleGroup>
+				</JFXRadioButton>
+				<HBox fx:id="jointCommandHBox">
+					<children>
+						<ScrollPane prefWidth="320.0" vbarPolicy="NEVER">
+							<content>
+								<HBox alignment="CENTER_LEFT" prefHeight="34.0" spacing="5.0" />
+							</content>
+						</ScrollPane>
+					</children>
+				</HBox>
+				<Separator prefWidth="200.0" />
+				<JFXRadioButton fx:id="positionCommand" accessibleText="positionCommand" text="Move To (Inverse Kinematics):" toggleGroup="$commandType" />
+				<HBox fx:id="positionCommandHBox" spacing="2.0">
+					<children>
+						<TextField fx:id="posX" prefWidth="80.0" />
+						<TextField fx:id="posY" layoutX="10.0" layoutY="10.0" prefWidth="80.0" />
+						<TextField fx:id="posZ" layoutX="159.0" layoutY="10.0" prefWidth="80.0" />
+					</children>
+				</HBox>
+				<Separator layoutX="10.0" layoutY="32.0" prefWidth="200.0" />
+				<JFXRadioButton fx:id="jumpCommand" accessibleText="jumpCommand" text="Jump:" toggleGroup="$commandType" />
+				<HBox fx:id="jumpCommandHBox" spacing="2.0">
+					<children>
+						<TextField fx:id="targetId" />
+					</children>
+				</HBox>
+				<Separator layoutX="10.0" layoutY="62.0" prefWidth="200.0" />
+				<JFXRadioButton fx:id="sleepCommand" accessibleText="sleepCommand" text="Sleep:" toggleGroup="$commandType" />
+				<HBox fx:id="sleepCommandHBox" layoutX="10.0" layoutY="182.0" spacing="2.0">
+					<children>
+						<TextField fx:id="sleepTime" />
+					</children>
+				</HBox>
+				<StackPane>
+					<children>
+						<JFXButton fx:id="addCommand" buttonType="RAISED" style="-fx-background-color: lightgrey;" text="Add" />
+					</children>
+				</StackPane>
+			</children>
+		</VBox>
+	</children>
+</AnchorPane>

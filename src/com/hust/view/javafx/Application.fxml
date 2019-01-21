@@ -8,12 +8,18 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Accordion?>
+<?import javafx.scene.control.ContextMenu?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
@@ -37,6 +43,82 @@
                         </ScrollPane>
                      </children>
                   </AnchorPane>
+                  <Accordion layoutX="-1.0" prefHeight="478.0" prefWidth="380.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                    <panes>
+                      <TitledPane ellipsisString="" expanded="false" text="Teach">
+                        <content>
+                          <AnchorPane minHeight="0.0" minWidth="0.0" style="-fx-background-color: #3D4956;">
+                                 <children>
+                                    <VBox layoutX="106.0" layoutY="67.0" spacing="2.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <children>
+                                          <HBox>
+                                             <children>
+                                                <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Processes List">
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font>
+                                                </Text>
+                                             </children>
+                                          </HBox>
+                                          <ListView fx:id="processList" prefHeight="200.0">
+                                             <contextMenu>
+                                                <ContextMenu fx:id="processListContext">
+                                                  <items>
+                                                      <MenuItem fx:id="plcSelect" mnemonicParsing="false" text="Select" />
+                                                      <MenuItem fx:id="plcNew" mnemonicParsing="false" text="New" />
+                                                      <SeparatorMenuItem mnemonicParsing="false" />
+                                                    <MenuItem fx:id="plcExecute" mnemonicParsing="false" text="Execute" />
+                                                      <SeparatorMenuItem mnemonicParsing="false" />
+                                                      <MenuItem fx:id="plcRename" mnemonicParsing="false" text="Rename" />
+                                                      <MenuItem fx:id="plcMoveup" mnemonicParsing="false" text="Move up" />
+                                                      <MenuItem fx:id="plcMovedown" mnemonicParsing="false" text="Move down" />
+                                                      <SeparatorMenuItem mnemonicParsing="false" />
+                                                      <MenuItem fx:id="plcDelete" mnemonicParsing="false" text="Delete" />
+                                                  </items>
+                                                </ContextMenu>
+                                             </contextMenu></ListView>
+                                          <HBox>
+                                             <children>
+                                                <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Commands">
+                                                   <font>
+                                                      <Font name="System Bold" size="12.0" />
+                                                   </font>
+                                                </Text>
+                                             </children>
+                                          </HBox>
+                                          <ListView fx:id="commandList" layoutX="10.0" layoutY="32.0">
+                                             <contextMenu>
+                                                <ContextMenu fx:id="commandListContext">
+                                                  <items>
+                                                      <MenuItem fx:id="clcAdd" mnemonicParsing="false" text="Add" />
+                                                      <SeparatorMenuItem mnemonicParsing="false" />
+                                                    <MenuItem fx:id="clcExecute" mnemonicParsing="false" text="Execute" />
+                                                      <SeparatorMenuItem mnemonicParsing="false" />
+                                                      <MenuItem fx:id="clcMoveup" mnemonicParsing="false" text="Move up" />
+                                                      <MenuItem fx:id="clcMovedown" mnemonicParsing="false" text="Move down" />
+                                                      <SeparatorMenuItem mnemonicParsing="false" />
+                                                      <MenuItem fx:id="clcDelete" mnemonicParsing="false" text="Delete" />
+                                                  </items>
+                                                </ContextMenu>
+                                             </contextMenu></ListView>
+                                          <HBox alignment="TOP_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="6.0" />
+                                       </children>
+                                    </VBox>
+                                 </children>
+                              </AnchorPane>
+                        </content>
+                      </TitledPane>
+                        <TitledPane ellipsisString="" expanded="false" layoutX="10.0" layoutY="10.0" text="Config">
+                           <content>
+                              <AnchorPane minHeight="0.0" minWidth="0.0" style="-fx-background-color: #3D4956;">
+                                 <children>
+                                    <VBox alignment="TOP_CENTER" layoutX="106.0" layoutY="67.0" spacing="5.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </TitledPane>
+                    </panes>
+                  </Accordion>
                </children>
             </AnchorPane>
             <AnchorPane prefHeight="480.0" prefWidth="269.0">
@@ -71,7 +153,7 @@
                                           </StackPane>
                                           <VBox prefHeight="200.0" prefWidth="162.0" spacing="5.0" VBox.vgrow="ALWAYS">
                                              <children>
-                                                <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Temperature">
+                                                <Text fill="WHITE" strokeType="OUTSIDE" strokeWidth="0.0" text="Temperature:">
                                                    <font>
                                                       <Font name="System Bold Italic" size="12.0" />
                                                    </font>

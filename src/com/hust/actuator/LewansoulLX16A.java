@@ -2,6 +2,7 @@ package com.hust.actuator;
 
 import java.util.concurrent.TimeUnit;
 
+import com.hust.core.Configurations;
 import com.hust.utils.concurrent.RequestTransferQueue;
 
 import jssc.SerialPort;
@@ -50,9 +51,14 @@ public class LewansoulLX16A {
 	protected SerialPort serialPort;
 
 	/**
+	 * Timout.
+	 */
+	protected long readbackTimeout = Configurations.readbackTimeout;
+
+	/**
 	 * A transfer queue for transferring results of serial listener.
 	 */
-	private RequestTransferQueue<Object> queue = new RequestTransferQueue<>();
+	private RequestTransferQueue<Object> queue;
 
 //	private BinarySemaphore readSemaphore = new BinarySemaphore(false);
 
@@ -62,7 +68,7 @@ public class LewansoulLX16A {
 	 * @throws SerialPortException
 	 */
 	public LewansoulLX16A() throws SerialPortException {
-
+		queue = new RequestTransferQueue<>();
 	}
 
 	/**
@@ -338,7 +344,7 @@ public class LewansoulLX16A {
 
 		queue.requested = true;
 		serialWrite(bytes);
-		Integer res = (Integer) queue.poll(5, TimeUnit.MILLISECONDS);
+		Integer res = (Integer) queue.poll(Configurations.readbackTimeout, TimeUnit.MILLISECONDS);
 		queue.requested = false;
 		return res;
 	}
@@ -535,7 +541,7 @@ public class LewansoulLX16A {
 
 		queue.requested = true;
 		serialWrite(bytes);
-		Integer res = (Integer) queue.poll(5, TimeUnit.MILLISECONDS);
+		Integer res = (Integer) queue.poll(Configurations.readbackTimeout, TimeUnit.MILLISECONDS);
 		queue.requested = false;
 		return res;
 	}
@@ -730,7 +736,7 @@ public class LewansoulLX16A {
 
 		queue.requested = true;
 		serialWrite(bytes);
-		Integer res = (Integer) queue.poll(5, TimeUnit.MILLISECONDS);
+		Integer res = (Integer) queue.poll(Configurations.readbackTimeout, TimeUnit.MILLISECONDS);
 		queue.requested = false;
 		return res;
 	}
@@ -787,7 +793,7 @@ public class LewansoulLX16A {
 
 		queue.requested = true;
 		serialWrite(bytes);
-		Float res = (Float) queue.poll(5, TimeUnit.MILLISECONDS);
+		Float res = (Float) queue.poll(Configurations.readbackTimeout, TimeUnit.MILLISECONDS);
 		queue.requested = false;
 		return res;
 	}
@@ -927,7 +933,7 @@ public class LewansoulLX16A {
 		}
 
 		// Insert to transfer queue if requested.
-		if (queue.requested) {
+		if (queue.requested && val != null) {
 			queue.tryTransfer(val);
 		}
 	}

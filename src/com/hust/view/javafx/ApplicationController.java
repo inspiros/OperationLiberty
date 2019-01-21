@@ -10,6 +10,8 @@ import com.hust.model.Models;
 import com.hust.model.robot.Bone;
 import com.hust.model.robot.Joint;
 import com.hust.model.robot.kinematics.KinematicsSolver;
+import com.hust.model.robot.process.Command;
+import com.hust.model.robot.process.Process;
 import com.hust.core.Main;
 import com.hust.utils.Utils;
 import com.hust.utils.algebra.FloatMatrix3;
@@ -34,11 +36,17 @@ import javafx.scene.Scene;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -51,7 +59,7 @@ public class ApplicationController implements Initializable {
 	/**
 	 * Controlled model.
 	 */
-	private Models model;
+	Models model;
 
 	private Stage stage;
 	private Scene scene;
@@ -108,6 +116,14 @@ public class ApplicationController implements Initializable {
 	@FXML
 	private JFXButton setTargetBtn;
 
+	public ListView<Process> processList;
+	public ListView<Command> commandList;
+
+	@FXML
+	private ContextMenu processListContext;
+	@FXML
+	private ContextMenu commandListContext;
+
 	public Stage getStage() {
 		return stage;
 	}
@@ -132,6 +148,7 @@ public class ApplicationController implements Initializable {
 		initializePanes();
 		initializeListeners();
 		initializeSensorsDisplayer();
+		initializeProcessDisplayer();
 	}
 
 	/**
@@ -521,11 +538,69 @@ public class ApplicationController implements Initializable {
 //								((NumberAxis) temperatureChart.getYAxis())
 //										.setLowerBound(list.remove(0).getXValue().doubleValue());
 							}
-							list.add(new XYChart.Data<Number, Number>(tick.incrementAndGet(), number));
+							if (number != null)
+								list.add(new XYChart.Data<Number, Number>(tick.incrementAndGet(), number));
 						});
 					}
 				}
 			});
 		});
 	}
+
+	@FXML
+	private MenuItem plcSelect, plcNew, plcExecute, plcRename, plcMoveup, plcMovedown, plcDelete;
+	@FXML
+	private MenuItem clcAdd, clcExecute, clcMoveup, clcMovedown, clcDelete;
+
+	private void initializeProcessDisplayer() {
+		try {
+			Configurations.MODULES_INITIALIZATION.get("model.unulled").await();
+		} catch (InterruptedException e) {
+		}
+		processList.setItems(model.process.processes);
+
+		plcSelect.setOnAction((event) -> {
+			if (!processList.getSelectionModel().isEmpty())
+				commandList.setItems(processList.getSelectionModel().getSelectedItem().commands);
+		});
+		plcNew.setOnAction((event) -> {
+			Process process = new Process();
+			process.model = model;
+			model.process.processes.add(process);
+		});
+		plcExecute.setOnAction((event) -> {
+			if (!processList.getSelectionModel().isEmpty()) {
+				processList.getSelectionModel().getSelectedItem().start();
+				Alert alert = new Alert(AlertType.CONFIRMATION, "Stop Process", ButtonType.APPLY);
+				alert.showAndWait();
+				processList.getSelectionModel().getSelectedItem().stop();
+			}
+		});
+		plcDelete.setOnAction((event) -> {
+			if (!processList.getSelectionModel().isEmpty()) {
+				Process toRemove = processList.getSelectionModel().getSelectedItem();
+				model.process.processes.remove(toRemove);
+			}
+		});
+
+		clcAdd.setOnAction((event) -> {
+			if (!processList.getSelectionModel().isEmpty())
+				new CommandAddDialog();
+		});
+		clcExecute.setOnAction((event) -> {
+			if (!processList.getSelectionModel().isEmpty() && !commandList.getSelectionModel().isEmpty())
+				try {
+					commandList.getSelectionModel().getSelectedItem().execute();
+				} catch (InterruptedException e) {
+				}
+		});
+		clcDelete.setOnAction((event) -> {
+			if (!processList.getSelectionModel().isEmpty() && !commandList.getSelectionModel().isEmpty()) {
+				Command toRemove = commandList.getSelectionModel().getSelectedItem();
+				model.process.processes.get(model.process.processes.indexOf(toRemove.process)).commands
+						.remove(toRemove);
+			}
+		});
+	}
+
 }
